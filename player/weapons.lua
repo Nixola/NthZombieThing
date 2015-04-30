@@ -45,7 +45,8 @@ weapons.draw = function(self)
   if self.current.timer < self.current.duration then
     lg.setColor(255,255,255, (1-self.current.timer/self.current.duration)*255)
     local v = vector(self.shot.px, self.shot.py, self.shot.x, self.shot.y)  % (self.shot.distance or 1100)
-    lg.line(v:unpack())
+    local x1, y1, x2, y2 = v:unpack()
+    lg.line(x2 and x1 or 0, y2 and y1 or 0, x2 or x1, y2 or y1)
   end
 end
 
