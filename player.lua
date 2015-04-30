@@ -185,6 +185,7 @@ player.levelChoices.refresh = function(self)
     for i, v in ipairs(self) do
       self[i] = nil
     end
+    self[0] = nil
     return
   end
   local choices = dofile 'player/levelup.lua'
@@ -193,6 +194,8 @@ player.levelChoices.refresh = function(self)
     self[i] = choices[choice]
     table.remove(choices, choice)
   end
+  self[0] = choices[0]
+
 end
 
 
