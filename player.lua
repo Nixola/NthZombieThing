@@ -140,11 +140,7 @@ player.draw = function(self)
 end
 
 player.drawHud = function(self)
---[[
-  lg.setColor(255 * (1 - self.hp.current / self.hp.max ), 255 / self.hp.max * self.hp.current , 0)
-  lg.print("HP: " .. self.hp.current, 0, 0)
-  lg.setColor(255,255,255)
-  lg.print("velocity: " .. string.format("%3.2f", self.velocity:length()), 0, 16)--]]
+
   lg.setColor(32,32,32)
   lg.rectangle('fill', 0, self.hud.y, lg.getWidth(), self.hud.height)
 
@@ -154,20 +150,29 @@ player.drawHud = function(self)
   lg.setColor(128 + self.experience/self.level/10*96, 128 + self.experience/self.level/10*96, 255)
   lg.print("XP: " .. self.experience .. "/" .. self.level*10, 0, self.hud.y + 16)
 
+  lg.setColor(192,192,192)
+
   if self.levelChoices.points > 0 then 
     for i = 1, 3 do
-      lg.setColor(192,192,192)
-      lg.rectangle("line", 96*i, self.hud.y + 8, 88, self.hud.height - 16)
+      lg.rectangle("line", 96*i, self.hud.y + 40, 88, self.hud.height - 16)
       lg.printf(self.levelChoices[i].desc, 4+96*i, self.hud.y + self.hud.height/2, 80)
     end
   end
+
+  for i = 1, #self.weapons.list do
+    local weapon = self.weapons[self.weapons.list[i]]
+    lg.setColor((weapon.name == self.weapons.current.name) and {224, 224, 224} or {160, 160, 160})
+    lg.rectangle("line", 96*i, self.hud.y + 8, 88, 24)
+    lg.print(weapon.name, 4+96*i, self.hud.y+12)
+  end
+
 end
 
 player.keypressed = function(self, k)
   if tonumber(k) and player.weapons.list[tonumber(k)] then
     player.weapons:set(k)
   end
-  if bindings[k] then
+  if bindings[k] and self.levelChoices.points > 0 then
     self.levelChoices[bindings[k]].func()
     self.levelChoices.points = self.levelChoices.points - 1
     self.levelChoices:refresh()

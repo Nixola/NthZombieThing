@@ -27,7 +27,6 @@ end
 
 love.draw = function()
   camera:set()
-    print(camera:getPosition())
   
     lg.setColor(192,32,32)
     for x = -1, 1 do
