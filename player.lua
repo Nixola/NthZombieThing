@@ -150,6 +150,9 @@ player.drawHud = function(self)
   lg.setColor(128 + self.experience/self.level/10*96, 128 + self.experience/self.level/10*96, 255)
   lg.print("XP: " .. self.experience .. "/" .. self.level*10, 0, self.hud.y + 16)
 
+  lg.setColor(192,192,0)
+  lg.printf("LV: " .. self.level, 0, self.hud.y + 16, 92, "right")
+
   lg.setColor(192,192,192)
 
   if self.levelChoices.points > 0 then 

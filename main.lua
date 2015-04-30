@@ -53,7 +53,5 @@ end
 
 
 love.mousepressed = function(x, y, b)
-  if not player.weapons.current.autofire and player.weapons.current.timer > 1/player.weapons.current.rate and b == 'l' then
-    player.weapons:shoot(x,y)
-  end
+  player.weapons:mousepressed(x,y,b)
 end

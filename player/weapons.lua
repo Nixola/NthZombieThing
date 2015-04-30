@@ -7,11 +7,14 @@ local weapons = {}
 c = function(t)
   return setmetatable(t, {__index = weapons})
 end
-weapons.list = {"gun", "uzi", "sniper"}
-weapons.gun = {name = "Handgun",         damage = 20,  duration = .3,   rate = 2,    spread = .06, autofire = false}
-weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1, autofire = true}
-weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5,   spread = 0,   autofire = false}
---weapons.shotgun
+weapons.list = {"gun", "uzi", "sniper", "shotgun"}
+weapons.gun = {name = "Handgun",         damage = 20,  duration = .3,   rate = 2,  spread = .06, bullets = 1,  autofire = false}
+weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  autofire = true}
+weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5, spread = 0,   bullets = 1,  autofire = false}
+weapons.shotgun = {name = "Shotgun",     damage = 4,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, autofire = false}
+
+
+weapons.lines = {}
 
 weapons.current = c{timer = math.huge, rate = 1}
 
@@ -32,12 +35,16 @@ weapons.set = function(self, name)
   self.current.rate = new.rate
   self.current.autofire = new.autofire
   self.current.spread = new.spread
+  self.current.bullets = new.bullets
 end
 
 
 weapons.update = function(self, dt)
   if self.current.autofire and self.current.timer > 1/self.current.rate and lm.isDown 'l' then
-    self:shoot(lm.getPosition())
+    self.lines = {}
+    for i = 1, self.current.bullets do
+      self:shoot(lm.getPosition())
+    end
   end
   self.current.timer = self.current.timer + dt
 end
@@ -46,9 +53,12 @@ end
 weapons.draw = function(self)
   if self.current.timer < self.current.duration then
     lg.setColor(255,255,255, (1-self.current.timer/self.current.duration)*255)
-    local v = vector(self.shot.px, self.shot.py, self.shot.x, self.shot.y)  % (self.shot.distance or 1100)
-    local x1, y1, x2, y2 = v:unpack()
-    lg.line(x2 and x1 or 0, y2 and y1 or 0, x2 or x1, y2 or y1)
+    for i, v in ipairs(self.lines) do
+      local x1, y1, x2, y2 = v:unpack()
+      lg.line(x2 and x1 or 0, y2 and y1 or 0, x2 or x1, y2 or y1)
+    end
+    --local v = vector(self.shot.px, self.shot.py, self.shot.x, self.shot.y)  % (self.shot.distance or 1100)
+
   end
 end
 
@@ -94,8 +104,24 @@ weapons.shoot = function(self, x, y)
   table.sort(targets, function(a, b) return a.distance < b.distance end)
   if targets[1] then 
     targets[1]:hit(self.current.damage)
-    self.shot.distance = targets[1].distance
+    --self.shot.distance = targets[1].distance
+    local line = vector(p.x, p.y, x, y)%targets[1].distance
+    self.lines[#self.lines+1] = line
+  else
+    self.lines[#self.lines+1] = vector(p.x, p.y, x, y)%1100
   end
+end
+
+
+weapons.mousepressed = function(self, x, y, b)
+
+  if not self.current.autofire and self.current.timer > 1/self.current.rate and b == 'l' then
+    self.lines = {}
+    for i = 1, self.current.bullets do
+      self:shoot(lm.getPosition())
+    end
+  end
+
 end
 
 return weapons

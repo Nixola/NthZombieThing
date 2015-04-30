@@ -108,6 +108,7 @@ end
 
 
 enemy.die = function(self)
+  if self.dead then return end
   self.dead = true
   p:getExp(self.level)
   --spawn things, award exp to player
