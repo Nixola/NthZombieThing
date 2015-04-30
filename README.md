@@ -13,9 +13,9 @@ Controls:
 * 0 is the ultimate powerup, put in for testing. Do not use.
 
 Weapons:
-*Handgun. Doesn't autofire, deals moderate damage, has a moderate rate and a moderate spread.
-*Uzi. Ridicolously OP as of now, I should balance it sooner or later. Maybe I'll add another super-duper weapon called TestKiller or something.
-*Sniper Rifle. Also OP, but not intentionally. High damage, low rate and ZERO spread.
+* Handgun. Doesn't autofire, deals moderate damage, has a moderate rate and a moderate spread.
+* Uzi. Ridicolously OP as of now, I should balance it sooner or later. Maybe I'll add another super-duper weapon called TestKiller or something.
+* Sniper Rifle. Also OP, but not intentionally. High damage, low rate and ZERO spread.
 
 What's to say here? Oh right, an incoming features list!
 * balance UZI
