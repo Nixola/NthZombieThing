@@ -11,7 +11,7 @@ weapons.list = {"gun", "uzi", "sniper", "shotgun"}
 weapons.gun = {name = "Handgun",         damage = 20,  duration = .3,   rate = 2,  spread = .06, bullets = 1,  autofire = false}
 weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  autofire = true}
 weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5, spread = 0,   bullets = 1,  autofire = false}
-weapons.shotgun = {name = "Shotgun",     damage = 4,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, autofire = false}
+weapons.shotgun = {name = "Shotgun",     damage = 5,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, autofire = false}
 
 
 weapons.lines = {}
@@ -96,12 +96,16 @@ weapons.shoot = function(self, x, y)
       local pos2 = (-b + Delta^.5)/(2*a)
       if (0 <= pos1) or (0 <= pos2) then
         targets[#targets+1] = enemy
-        enemy.distance = vector(p.x, p.y, enemy.position.x, enemy.position.y):length()
+        --enemy.distance = vector(p.x, p.y, enemy.position.x, enemy.position.y):length()
+        enemy.distance = vector(p.x, p.y, x, y):length()*pos1
       end
     end
   end
 
   table.sort(targets, function(a, b) return a.distance < b.distance end)
+  while targets[1] and targets[1].dead do
+    table.remove(targets, 1)
+  end
   if targets[1] then 
     targets[1]:hit(self.current.damage)
     --self.shot.distance = targets[1].distance
