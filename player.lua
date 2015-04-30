@@ -17,7 +17,8 @@ local player = {
   damping = .1,
   experience = 0,
   level = 1,
-  damage = 1,
+  damage = 1,--damage multiplier
+  spread = 1,--spread multiplier
   levelChoices = {points = 0},
   hp = {max = 100, current = 100},
   particles = {

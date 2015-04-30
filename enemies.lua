@@ -97,8 +97,6 @@ enemies.draw = function(self)
 end
 
 
-
-
 enemy.hit = function(self, damage)
   self.hp = self.hp - damage
   if self.hp <= 0 then

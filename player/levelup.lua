@@ -9,13 +9,19 @@ local choices = {
   {func = function() -- more damage! 5% more
     game.player.damage = game.player.damage + .05
   end,
-  desc = "Increase damage by 5% (no compound)"},
+  desc = "Increase damage by 5% (not compound)"},
 
   {func = function() -- speeder
     game.player.maxvelocity = game.player.maxvelocity + 15
     game.player.acceleration = game.player.acceleration + 10
   end,
-  desc = "Increase speed and acceleration"}
+  desc = "Increase speed and acceleration"},
+
+  {func = function() -- less spread
+    game.player.spread = game.player.spread*.9
+  end,
+  desc = "Decreases spread by 10% (compound)"
+  }
 }
 
 return choices

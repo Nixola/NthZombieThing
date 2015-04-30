@@ -69,7 +69,7 @@ weapons.shoot = function(self, x, y)
   x = x - cameraX
   y = y - cameraY
   local ray = vector(p.x, p.y, x, y)
-  local angle = ray:angle() + (love.math.random()*self.current.spread-self.current.spread/2)*math.pi
+  local angle = ray:angle() + (love.math.random()*self.current.spread-self.current.spread/2)*math.pi*p.spread
   local l = ray:length()
   ray(p.x, p.y, p.x + math.cos(angle), p.y + math.sin(angle))
   ray:scaleTo(l)
