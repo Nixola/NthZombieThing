@@ -19,6 +19,5 @@ Weapons:
 
 What's to say here? Oh right, an incoming features list!
 * add a bunch of weapons
-* probably add critical hits
 
 That's it. Yay!
