@@ -21,6 +21,10 @@ vector.length = function(self)
   return (self.x*self.x + self.y*self.y)^.5
 end
 
+vector.angle = function(self)
+  return math.atan2(self.y, self.x)
+end
+
 vector.add = function(v1, v2) -- Sum of two vectors
   v1.x2 = v1.x1+v1.x+v2.x
   v1.y2 = v1.y1+v1.y+v2.y

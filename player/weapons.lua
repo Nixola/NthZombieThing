@@ -8,9 +8,10 @@ c = function(t)
   return setmetatable(t, {__index = weapons})
 end
 weapons.list = {"gun", "uzi", "sniper"}
-weapons.gun = {name = "Handgun",         damage = 20,  duration = .3,   rate = 2,    spread = .02, autofire = false}
-weapons.uzi = {name = "Uzi",             damage = 20,   duration = 1/15, rate = 15,   spread = .05, autofire = true}
-weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = 2/3,  spread = 0,   autofire = false}
+weapons.gun = {name = "Handgun",         damage = 20,  duration = .3,   rate = 2,    spread = .06, autofire = false}
+weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1, autofire = true}
+weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5,   spread = 0,   autofire = false}
+--weapons.shotgun
 
 weapons.current = c{timer = math.huge, rate = 1}
 
@@ -30,6 +31,7 @@ weapons.set = function(self, name)
   self.current.duration = new.duration
   self.current.rate = new.rate
   self.current.autofire = new.autofire
+  self.current.spread = new.spread
 end
 
 
@@ -56,6 +58,14 @@ weapons.shoot = function(self, x, y)
   local cameraX, cameraY = game.camera:getPosition()
   x = x - cameraX
   y = y - cameraY
+  local ray = vector(p.x, p.y, x, y)
+  local angle = ray:angle() + (love.math.random()*self.current.spread-self.current.spread/2)*math.pi
+  local l = ray:length()
+  ray(p.x, p.y, p.x + math.cos(angle), p.y + math.sin(angle))
+  ray:scaleTo(l)
+  x = ray.x2
+  y = ray.y2
+
   self.shot = {x = x, y = y, px = p.x, py = p.y}
   local targets = {}
   for i, enemy in ipairs(game.enemies) do
