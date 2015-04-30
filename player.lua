@@ -154,7 +154,7 @@ player.drawHud = function(self)
 
   if self.levelChoices.points > 0 then 
     for i = 1, 3 do
-      lg.rectangle("line", 96*i, self.hud.y + 40, 88, self.hud.height - 16)
+      lg.rectangle("line", 96*i, self.hud.y + 40, 88, self.hud.height - 44)
       lg.printf(self.levelChoices[i].desc, 4+96*i, self.hud.y + self.hud.height/2, 80)
     end
   end
