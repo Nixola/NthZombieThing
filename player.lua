@@ -4,6 +4,7 @@ local lg = love.graphics
 local W, H = love.window.getDimensions()
 
 local vector = require 'vecturr'
+local enemies = require 'enemies'
 
 local bindings = {z = 1, x = 2, c = 3, ['0'] = 0}
 
@@ -19,6 +20,7 @@ local player = {
   level = 1,
   damage = 1,--damage multiplier
   spread = 1,--spread multiplier
+  critical = {chance = 1, damage = 1}, -- critical multiplier
   levelChoices = {points = 0},
   hp = {max = 100, current = 100},
   particles = {
@@ -105,7 +107,7 @@ player.getExp = function(self, amount)
   while self.experience >= self.level*10 do
     self.experience = self.experience - self.level*10
     self.level = self.level + 1
-    game.enemies.level = game.enemies.level + 1
+    enemies.level = enemies.level + 1
     self.levelChoices.points = self.levelChoices.points + 1
     self.levelChoices:refresh()
   end
@@ -177,7 +179,7 @@ player.keypressed = function(self, k)
     player.weapons:set(k)
   end
   if bindings[k] and self.levelChoices.points > 0 then
-    self.levelChoices[bindings[k]].func()
+    self.levelChoices[bindings[k]].func(self, self.weapons, enemies)
     self.levelChoices.points = self.levelChoices.points - 1
     self.levelChoices:refresh()
   end
@@ -193,6 +195,11 @@ player.levelChoices.refresh = function(self)
     return
   end
   local choices = dofile 'player/levelup.lua'
+  for i = #choices, 1, -1 do
+    if choices.condition and not choices.condition() then
+      table.remove(choice, i)
+    end
+  end
   for i = 1, 3 do
     local choice = love.math.random(#choices)
     self[i] = choices[choice]

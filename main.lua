@@ -1,10 +1,7 @@
-game = {}
 local camera = require 'camera'
-game.camera = camera
 local player = require 'player'
-game.player = player
 local enemies = require 'enemies'
-game.enemies = enemies
+local weapons = require 'player.weapons'
 
 io.stdout:setvbuf 'no'
 
@@ -53,5 +50,5 @@ end
 
 
 love.mousepressed = function(x, y, b)
-  player.weapons:mousepressed(x,y,b)
+  weapons:mousepressed(x,y,b)
 end

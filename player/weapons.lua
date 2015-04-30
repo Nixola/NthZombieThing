@@ -1,4 +1,6 @@
 local vector = require 'vecturr'
+local camera = require 'camera'
+local enemies = require 'enemies'
 
 local lg = love.graphics
 local lm = love.mouse
@@ -8,11 +10,11 @@ c = function(t)
   return setmetatable(t, {__index = weapons})
 end
 weapons.list = {"gun", "uzi", "sniper", "shotgun", "laser"}
-weapons.gun = {name = "Handgun",         damage = 25,  duration = .3,   rate = 2,  spread = .06, bullets = 1,  pierce = 1,  autofire = false}
-weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  pierce = 1,  autofire = true}
-weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5, spread = 0,   bullets = 1,  pierce = 1,  autofire = false}
-weapons.shotgun = {name = "Shotgun",     damage = 5,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, pierce = 1,  autofire = false}
-weapons.laser = {name = "Laser",         damage = 20,  duration = .25,  rate = .5, spread = .05, bullets = 1,  pierce = 10, autofire = true}
+weapons.gun = {name = "Handgun",         damage = 25,  duration = .3,   rate = 2,  spread = .06, bullets = 1,  pierce = 1,  critical = {chance = .1, damage = 1.5},  autofire = false} -- Handgun
+weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  pierce = 1,  critical = {chance = .08, damage = 2},   autofire = true}  -- Uzi
+weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5, spread = 0,   bullets = 1,  pierce = 1,  critical = {chance = .2, damage = 3},    autofire = false} -- Sniper rifle
+weapons.shotgun = {name = "Shotgun",     damage = 5,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, pierce = 1,  critical = {chance = .08, damage = 1.5}, autofire = false} -- Shotgun
+weapons.laser = {name = "Laser",         damage = 20,  duration = .25,  rate = .5, spread = .05, bullets = 1,  pierce = 10, critical = {chance = 1, damage = 1},     autofire = true}  -- Laser
 
 
 weapons.lines = {}
@@ -38,6 +40,7 @@ weapons.set = function(self, name)
   self.current.spread = new.spread
   self.current.bullets = new.bullets
   self.current.pierce = new.pierce
+  self.current.critical = new.critical
 end
 
 
@@ -54,8 +57,8 @@ end
 
 weapons.draw = function(self)
   if self.current.timer < self.current.duration then
-    lg.setColor(255,255,255, (1-self.current.timer/self.current.duration)*255)
     for i, v in ipairs(self.lines) do
+      lg.setColor(255, v.critical and 0 or 255, v.critical and 0 or 255, (1-self.current.timer/self.current.duration)*255)
       local x1, y1, x2, y2 = v:unpack()
       lg.line(x2 and x1 or 0, y2 and y1 or 0, x2 or x1, y2 or y1)
     end
@@ -67,7 +70,7 @@ end
 
 weapons.shoot = function(self, x, y)
   self.current.timer = 0
-  local cameraX, cameraY = game.camera:getPosition()
+  local cameraX, cameraY = camera:getPosition()
   x = x - cameraX
   y = y - cameraY
   local ray = vector(p.x, p.y, x, y)
@@ -80,7 +83,7 @@ weapons.shoot = function(self, x, y)
 
   self.shot = {x = x, y = y, px = p.x, py = p.y}
   local targets = {}
-  for i, enemy in ipairs(game.enemies) do
+  for i, enemy in ipairs(enemies) do
     local rayStart = vector(p.x, p.y)
     local rayEnd = vector(x, y)
     local Enemy = vector(enemy.position.x, enemy.position.y)
@@ -108,20 +111,32 @@ weapons.shoot = function(self, x, y)
   while targets[#targets] and targets[#targets].dead do
     table.remove(targets, #targets)
   end
+
+  local damage, critical = self.current.damage, false
+  if love.math.random() <= self.current.critical.chance*p.critical.chance then
+    damage = damage * self.current.critical.damage * p.critical.damage
+    critical = true
+  end
+
   if targets[#targets] then
     local lastTarget
     local pierce = self.current.pierce
+
     while pierce >= 1 and targets[#targets] do
       targets[#targets]:hit(self.current.damage)
       lastTarget = targets[#targets]
       pierce = pierce - 1
       table.remove(targets, #targets)
     end
+
     local line
+
     if pierce == 0 then
       line = vector(p.x, p.y, x, y)%lastTarget.distance
+      line.critical = critical
     else
       line = vector(p.x, p.y, x, y)%1100
+      line.critical = critical
     end
     self.lines[#self.lines+1] = line
   else

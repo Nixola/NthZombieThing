@@ -8,7 +8,7 @@ end
 local enemies = {}
 local enemy = enemies
 local W, H = love.window.getDimensions()
-local p = game.player
+local p = require 'player'
 
             enemies.hp = 90
         enemies.damage = 11
