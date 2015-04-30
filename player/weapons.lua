@@ -7,11 +7,12 @@ local weapons = {}
 c = function(t)
   return setmetatable(t, {__index = weapons})
 end
-weapons.list = {"gun", "uzi", "sniper", "shotgun"}
-weapons.gun = {name = "Handgun",         damage = 20,  duration = .3,   rate = 2,  spread = .06, bullets = 1,  autofire = false}
-weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  autofire = true}
-weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5, spread = 0,   bullets = 1,  autofire = false}
-weapons.shotgun = {name = "Shotgun",     damage = 5,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, autofire = false}
+weapons.list = {"gun", "uzi", "sniper", "shotgun", "laser"}
+weapons.gun = {name = "Handgun",         damage = 25,  duration = .3,   rate = 2,  spread = .06, bullets = 1,  pierce = 1,  autofire = false}
+weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  pierce = 1,  autofire = true}
+weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5, spread = 0,   bullets = 1,  pierce = 1,  autofire = false}
+weapons.shotgun = {name = "Shotgun",     damage = 5,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, pierce = 1,  autofire = false}
+weapons.laser = {name = "Laser",         damage = 20,  duration = .25,  rate = .5, spread = .05, bullets = 1,  pierce = 10, autofire = true}
 
 
 weapons.lines = {}
@@ -36,6 +37,7 @@ weapons.set = function(self, name)
   self.current.autofire = new.autofire
   self.current.spread = new.spread
   self.current.bullets = new.bullets
+  self.current.pierce = new.pierce
 end
 
 
@@ -102,14 +104,25 @@ weapons.shoot = function(self, x, y)
     end
   end
 
-  table.sort(targets, function(a, b) return a.distance < b.distance end)
-  while targets[1] and targets[1].dead do
-    table.remove(targets, 1)
+  table.sort(targets, function(a, b) return a.distance > b.distance end)
+  while targets[#targets] and targets[#targets].dead do
+    table.remove(targets, #targets)
   end
-  if targets[1] then 
-    targets[1]:hit(self.current.damage)
-    --self.shot.distance = targets[1].distance
-    local line = vector(p.x, p.y, x, y)%targets[1].distance
+  if targets[#targets] then
+    local lastTarget
+    local pierce = self.current.pierce
+    while pierce >= 1 and targets[#targets] do
+      targets[#targets]:hit(self.current.damage)
+      lastTarget = targets[#targets]
+      pierce = pierce - 1
+      table.remove(targets, #targets)
+    end
+    local line
+    if pierce == 0 then
+      line = vector(p.x, p.y, x, y)%lastTarget.distance
+    else
+      line = vector(p.x, p.y, x, y)%1100
+    end
     self.lines[#self.lines+1] = line
   else
     self.lines[#self.lines+1] = vector(p.x, p.y, x, y)%1100
