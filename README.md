@@ -18,9 +18,7 @@ Weapons:
 * Sniper Rifle. Also OP, but not intentionally. High damage, low rate and ZERO spread.
 
 What's to say here? Oh right, an incoming features list!
-* balance UZI
 * add a bunch of weapons
-* actually code weapons' spread
 * add weapons that shoot more bullets at once (ow. this will be a pain in the ass)
 * probably add critical hits
 
