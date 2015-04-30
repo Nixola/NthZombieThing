@@ -19,7 +19,6 @@ Weapons:
 
 What's to say here? Oh right, an incoming features list!
 * add a bunch of weapons
-* add weapons that shoot more bullets at once (ow. this will be a pain in the ass)
 * probably add critical hits
 
 That's it. Yay!
