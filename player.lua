@@ -132,7 +132,7 @@ end
 
 player.draw = function(self)
 
-  lg.setColor(255,255,255)
+  lg.setColor(192,192,192)
   lg.circle("fill", self.x, self.y, self.r, self.r)
   for i, particleSystem in pairs(self.particles) do
     lg.draw(particleSystem)
