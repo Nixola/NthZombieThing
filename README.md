@@ -18,6 +18,6 @@ Weapons:
 * Sniper Rifle. Also OP, but not intentionally. High damage, low rate and ZERO spread.
 
 What's to say here? Oh right, an incoming features list!
-* add a bunch of weapons
+* None! I'll probably accept feature requests though
 
 That's it. Yay!
