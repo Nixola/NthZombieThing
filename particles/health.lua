@@ -1,6 +1,6 @@
 local lg = love.graphics
 
-local particle = lg.newParticleSystem(love.graphics.newImage("img/health.png"), 100)
+local particle = lg.newParticleSystem(img.health, 100)
 
 particle:setParticleLifetime(0.2, 2)
 particle:setEmitterLifetime(1)

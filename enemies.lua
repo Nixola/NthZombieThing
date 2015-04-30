@@ -1,4 +1,5 @@
 local vector = require 'vecturr'
+local drops = require 'drops'
 local lg = love.graphics
 
 local circleColl = function(x1,y1,r1, x2,y2,r2)
@@ -8,7 +9,9 @@ end
 local enemies = {}
 local enemy = enemies
 local W, H = love.window.getDimensions()
-local p = require 'player'
+local p
+
+enemies.load = function(self)
 
             enemies.hp = 90
         enemies.damage = 11
@@ -17,6 +20,8 @@ local p = require 'player'
   enemies.acceleration = 400
              enemies.r = 18
          enemies.level = 1
+         p = require 'player'
+end
 
 enemies.spawn = function(self, X, Y)
   local e = setmetatable({}, {__index = self})
@@ -109,6 +114,9 @@ enemy.die = function(self)
   if self.dead then return end
   self.dead = true
   p:getExp(self.level)
+  if love.math.random(10) == 1 then
+    drops:new(function(p) p:heal(15) end, img.health, self.position.x, self.position.y)
+  end
   --spawn things, award exp to player
 end
 

@@ -1,7 +1,10 @@
+require 'images'
+
 local camera = require 'camera'
 local player = require 'player'
 local enemies = require 'enemies'
 local weapons = require 'player.weapons'
+local drops = require 'drops'
 
 io.stdout:setvbuf 'no'
 
@@ -12,6 +15,7 @@ love.load = function()
   camera:follow(player)
   player:setCamera(camera)
   player:load()
+  enemies:load()
 end
 
 
@@ -31,7 +35,8 @@ love.draw = function()
         lg.rectangle('fill', (math.floor(player.x/400) + x) * 400, (math.floor(player.y/300) + y)*300, 16, 16) --just some squares to know where you're going
       end
     end
-    
+
+    drops:draw()
     player:draw()
     enemies:draw()
   

@@ -1,10 +1,15 @@
 local lk = love.keyboard
 local lg = love.graphics
 
+local circleColl = function(x1,y1,r1, x2,y2,r2)
+  return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) <= (r2+r1)*(r2+r1)
+end
+
 local W, H = love.window.getDimensions()
 
 local vector = require 'vecturr'
 local enemies = require 'enemies'
+local drops = require 'drops'
 
 local bindings = {z = 1, x = 2, c = 3, ['0'] = 0}
 
@@ -91,6 +96,14 @@ player.update = function(self, dt)
     particleSystem:setPosition(self.x, self.y)
     particleSystem:update(dt)
   end
+
+  for i = #drops, 1, -1 do
+    local drop = drops[i]
+    if circleColl(drop.x, drop.y, drop.r, self.x, self.y, self.r) then
+      drop.func(self)
+      table.remove(drops, i)
+    end
+  end
 end
 
 
@@ -148,7 +161,7 @@ player.drawHud = function(self)
   lg.rectangle('fill', 0, self.hud.y, lg.getWidth(), self.hud.height)
 
   lg.setColor(255 * (1 - self.hp.current / self.hp.max ), 255 / self.hp.max * self.hp.current , 0)
-  lg.print("HP: " .. math.floor(self.hp.current), 0, self.hud.y)
+  lg.print("HP: " .. math.floor(self.hp.current) .. "/" .. math.floor(self.hp.max), 0, self.hud.y)
 
   lg.setColor(128 + self.experience/self.level/10*96, 128 + self.experience/self.level/10*96, 255)
   lg.print("XP: " .. self.experience .. "/" .. self.level*10, 0, self.hud.y + 16)
