@@ -123,7 +123,7 @@ weapons.shoot = function(self, x, y)
     local pierce = self.current.pierce
 
     while pierce >= 1 and targets[#targets] do
-      targets[#targets]:hit(self.current.damage)
+      targets[#targets]:hit(self.current.damage, p.x, p.y)
       lastTarget = targets[#targets]
       pierce = pierce - 1
       table.remove(targets, #targets)

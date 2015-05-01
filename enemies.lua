@@ -17,7 +17,7 @@ enemies.load = function(self)
         enemies.damage = 11
   enemies.damageSpread = .2
       enemies.maxSpeed = 135
-  enemies.acceleration = 400
+  enemies.acceleration = 4000
              enemies.r = 18
          enemies.level = 1
          p = require 'player'
@@ -30,7 +30,7 @@ enemies.spawn = function(self, X, Y)
   repeat
     x = X or love.math.random(W) - W/2 + p.x
     y = Y or love.math.random(H) - H/2 + p.y
-  until not circleColl(p.x, p.y, p.r*2, x, y, self.r*2)
+  until not circleColl(p.x, p.y, p.r*3, x, y, self.r*3)
 
   e.position = vector(x,y)
   e.velocity = vector(0,0)
@@ -57,11 +57,15 @@ enemies.update = function(self, dt)
     if enemy.dead then 
       table.remove(self, i)
     else
-      enemy.a(enemy.position.x, enemy.position.y, p.x, p.y):scaleTo(enemy.acceleration*dt)
-      enemy.velocity = enemy.velocity + enemy.a
+      enemy.a(enemy.position.x, enemy.position.y, p.x, p.y):scaleTo(enemy.acceleration)
+      enemy.velocity = enemy.velocity + enemy.a*dt
       if enemy.velocity:length() > enemy.maxSpeed then
-        print "not so fast"
         enemy.velocity:scaleTo(self.maxSpeed)
+      end
+      for i, e2 in ipairs(self) do
+        if not (enemy == e2) and circleColl(enemy.position.x, enemy.position.y, enemy.r, e2.position.x, e2.position.y, e2.r) then
+          e2:hit(0, enemy.position.x, enemy.position.y)
+        end
       end
 
       enemy.position = enemy.position + enemy.velocity*dt
@@ -92,18 +96,20 @@ enemies.draw = function(self)
     lg.circle('fill', x, y, enemy.r-1, enemy.r)
   end
 
-  --and debug show their level
+  --and debug show their stuff
   lg.setColor(255,255,255)
   for i, enemy in ipairs(self) do
     local x, y = enemy.position:unpack()
-    lg.print(enemy.level, x, y)
+    lg.print(enemy.velocity:length(), x, y)
   end
 
 end
 
 
-enemy.hit = function(self, damage)
+enemy.hit = function(self, damage, x, y)
   self.hp = self.hp - damage
+  local bump = vector(x, y, self.position.x, self.position.y)%(damage*15+50)
+  self.velocity = self.velocity + bump
   if self.hp <= 0 then
     self:die()
   end
