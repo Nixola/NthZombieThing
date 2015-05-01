@@ -37,7 +37,7 @@ local choices = {
   end,
   desc = "Increases critical damage by 10%"},
 
-  {func = function(player, weapons, enemies) 
+  {func = function(player, weapons, enemies)  -- randomness!
     local weapon = weapons[weapons.list[love.math.random(#weapons.list)]]
     weapon.damage = weapon.damage * 1.1
     weapon.rate = weapon.rate * 1.1
@@ -45,6 +45,7 @@ local choices = {
     weapon.spread = weapon.spread * .9
     weapon.critical.chance = weapon.critical.chance * 1.1
     weapon.critical.damage = weapon.critical.damage * 1.1
+    weapon.level = weapon.level + 1
   end,
   desc = "Increases by 10% EVERY attribute of a random weapon.",
   condition = function(player, weapons, enemies) return love.math.random(4) == 1 end}

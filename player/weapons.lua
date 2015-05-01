@@ -10,11 +10,11 @@ c = function(t)
   return setmetatable(t, {__index = weapons})
 end
 weapons.list = {"gun", "uzi", "sniper", "shotgun", "laser"}
-weapons.gun = {name = "Handgun",         damage = 25,  duration = .3,   rate = 2,  spread = .06, bullets = 1,  pierce = 1,  critical = {chance = .1, damage = 1.5},  autofire = false} -- Handgun
-weapons.uzi = {name = "Uzi",             damage = 4,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  pierce = 1,  critical = {chance = .08, damage = 2},   autofire = true}  -- Uzi
-weapons.sniper = {name = "Sniper rifle", damage = 100, duration = 1,    rate = .5, spread = 0,   bullets = 1,  pierce = 1,  critical = {chance = .2, damage = 3},    autofire = false} -- Sniper rifle
-weapons.shotgun = {name = "Shotgun",     damage = 5,   duration = 1,    rate = 1,  spread = .2,  bullets = 15, pierce = 1,  critical = {chance = .08, damage = 1.5}, autofire = false} -- Shotgun
-weapons.laser = {name = "Laser",         damage = 20,  duration = .25,  rate = .5, spread = .05, bullets = 1,  pierce = 10, critical = {chance = 1, damage = 1},     autofire = true}  -- Laser
+weapons.gun = {name = "Handgun",         damage = 25,  magazine = 6,   reload = 1.5, duration = .3,   rate = 2,  spread = .06, bullets = 1,  pierce = 1,  critical = {chance = .1, damage = 1.5},  level = 0, autofire = false} -- Handgun
+weapons.uzi = {name = "Uzi",             damage = 4,   magazine = 30,  reload = 1,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  pierce = 1,  critical = {chance = .08, damage = 2},   level = 0, autofire = true}  -- Uzi
+weapons.sniper = {name = "Sniper rifle", damage = 100, magazine = 4,   reload = 2,   duration = 1,    rate = .5, spread = 0,   bullets = 1,  pierce = 1,  critical = {chance = .2, damage = 3},    level = 0, autofire = false} -- Sniper rifle
+weapons.shotgun = {name = "Shotgun",     damage = 5,   magazine = 75,  reload = 1.5, duration = 1,    rate = 1,  spread = .2,  bullets = 15, pierce = 1,  critical = {chance = .08, damage = 1.5}, level = 0, autofire = false} -- Shotgun
+weapons.laser = {name = "Laser",         damage = 20,  magazine = 6/0, reload = 0,   duration = .25,  rate = .5, spread = .05, bullets = 1,  pierce = 10, critical = {chance = 1, damage = 1},     level = 0, autofire = true}  -- Laser
 
 
 weapons.lines = {}
@@ -27,7 +27,7 @@ weapons.setPlayer = function(self, player)
 end
 
 weapons.set = function(self, name)
-  if self.current.timer < 1/self.current.rate then return end
+  if (self.current.timer < 1/self.current.rate) or self.current.reloading then return end
 
   if tonumber(name) then name = self.list[tonumber(name)] end
 
@@ -41,17 +41,26 @@ weapons.set = function(self, name)
   self.current.bullets = new.bullets
   self.current.pierce = new.pierce
   self.current.critical = new.critical
+  self.current.magazine = new.magazine
+  self.current.ammo = new.magazine
+  self.current.reload = new.reload
+  self.current.level = new.level
 end
 
 
 weapons.update = function(self, dt)
-  if self.current.autofire and self.current.timer > 1/self.current.rate and lm.isDown 'l' then
+  if self.current.autofire and self.current.timer > 1/self.current.rate and lm.isDown 'l' and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
       self:shoot(lm.getPosition())
     end
   end
   self.current.timer = self.current.timer + dt
+  self.current.reloading = self.current.reloading and self.current.reloading - dt
+  if self.current.reloading and self.current.reloading <= 0 then
+    self.current.reloading = false
+    self.current.ammo = self.current.magazine
+  end
 end
 
 
@@ -65,10 +74,16 @@ weapons.draw = function(self)
     --local v = vector(self.shot.px, self.shot.py, self.shot.x, self.shot.y)  % (self.shot.distance or 1100)
 
   end
+
 end
 
 
 weapons.shoot = function(self, x, y)
+  if self.current.reloading then return end
+  self.current.ammo = self.current.ammo - 1
+  if self.current.ammo == 0 then
+    self.current.reloading = self.current.reload
+  end
   self.current.timer = 0
   local cameraX, cameraY = camera:getPosition()
   x = x - cameraX
@@ -147,7 +162,7 @@ end
 
 weapons.mousepressed = function(self, x, y, b)
 
-  if not self.current.autofire and self.current.timer > 1/self.current.rate and b == 'l' then
+  if not self.current.autofire and self.current.timer > 1/self.current.rate and b == 'l' and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
       self:shoot(lm.getPosition())

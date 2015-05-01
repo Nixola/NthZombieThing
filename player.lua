@@ -11,6 +11,8 @@ local vector = require 'vecturr'
 local enemies = require 'enemies'
 local drops = require 'drops'
 
+local weapon
+
 local bindings = {z = 1, x = 2, c = 3, ['0'] = 0}
 
 local player = {
@@ -50,6 +52,8 @@ player.load = function(self)
   player.weapons:set "gun"
 
 end
+
+weapon = player.weapons.current
 
 player.update = function(self, dt)
 
@@ -147,6 +151,11 @@ end
 
 player.draw = function(self)
 
+  if self.weapons.current.reloading then
+    lg.setColor(128,128,192)
+    lg.arc("fill", self.x, self.y, self.r+2, 0, self.weapons.current.reloading/self.weapons.current.reload * 2 * math.pi)
+  end
+
   lg.setColor(192,192,192)
   lg.circle("fill", self.x, self.y, self.r, self.r)
   for i, particleSystem in pairs(self.particles) do
@@ -167,14 +176,17 @@ player.drawHud = function(self)
   lg.print("XP: " .. self.experience .. "/" .. self.level*10, 0, self.hud.y + 16)
 
   lg.setColor(192,192,0)
-  lg.printf("LV: " .. self.level, 0, self.hud.y + 16, 92, "right")
+  lg.printf("LV " .. self.level, 0, self.hud.y + 16, 92, "right")
 
   lg.setColor(192,192,192)
+  lg.print("Ammo: " .. math.ceil(weapon.ammo / weapon.bullets) .. "/" .. math.ceil(weapon.magazine / weapon.bullets), 0, self.hud.y + 32)
 
   if self.levelChoices.points > 0 then 
     for i = 1, 3 do
-      lg.rectangle("line", 96*i, self.hud.y + 40, 88, self.hud.height - 44)
-      lg.printf(self.levelChoices[i].desc, 4+96*i, self.hud.y + self.hud.height/2, 80)
+      local x = 96 + 192*(i-1)
+      local y = self.hud.y + 40
+      lg.rectangle("line", x, y, 88+96, self.hud.height - 44)
+      lg.printf(self.levelChoices[i].desc, 4+x+96, y + 4, 80)
     end
   end
 
@@ -182,7 +194,7 @@ player.drawHud = function(self)
     local weapon = self.weapons[self.weapons.list[i]]
     lg.setColor((weapon.name == self.weapons.current.name) and {224, 224, 224} or {160, 160, 160})
     lg.rectangle("line", 96*i, self.hud.y + 8, 88, 24)
-    lg.print(weapon.name, 4+96*i, self.hud.y+12)
+    lg.print(weapon.name .. ((weapon.level > 0) and (" +" .. weapon.level) or ''), 4+96*i, self.hud.y+12)
   end
 
 end
