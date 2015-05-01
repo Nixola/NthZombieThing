@@ -39,6 +39,7 @@ enemies.spawn = function(self, X, Y)
   e.maxHP = self.hp + self.level*10
   e.damage = self.damage + self.level*4
   e.maxSpeed = self.maxSpeed + self.level*15
+  e.acceleration = self.acceleration + self.level*250
   e.damageSpread = self.damageSpread
   e.r = self.r + love.math.random(5)-3
   e.level = self.level
