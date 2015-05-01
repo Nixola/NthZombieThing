@@ -219,7 +219,7 @@ player.levelChoices.refresh = function(self)
     self[0] = nil
     return
   end
-  local choices = dofile 'player/levelup.lua'
+  local choices = love.filesystem.load 'player/levelup.lua' ()
   for i = #choices, 1, -1 do
     if choices.condition and not choices.condition() then
       table.remove(choice, i)
