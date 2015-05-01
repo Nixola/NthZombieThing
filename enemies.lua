@@ -17,7 +17,7 @@ enemies.load = function(self)
         enemies.damage = 11
   enemies.damageSpread = .2
       enemies.maxSpeed = 135
-  enemies.acceleration = 4000
+  enemies.acceleration = 2500
              enemies.r = 18
          enemies.level = 1
          p = require 'player'
@@ -58,10 +58,11 @@ enemies.update = function(self, dt)
       table.remove(self, i)
     else
       enemy.a(enemy.position.x, enemy.position.y, p.x, p.y):scaleTo(enemy.acceleration)
-      enemy.velocity = enemy.velocity + enemy.a*dt
-      if enemy.velocity:length() > enemy.maxSpeed then
-        enemy.velocity:scaleTo(self.maxSpeed)
+      
+      if enemy.velocity:length() + enemy.a:length()*dt > enemy.maxSpeed then
+        enemy.a:scaleTo(math.max(0, (enemy.maxSpeed-enemy.velocity:length())/dt))
       end
+      enemy.velocity = enemy.velocity + enemy.a*dt
       for i, e2 in ipairs(self) do
         if not (enemy == e2) and circleColl(enemy.position.x, enemy.position.y, enemy.r, e2.position.x, e2.position.y, e2.r) then
           e2:hit(0, enemy.position.x, enemy.position.y)
@@ -109,7 +110,7 @@ end
 
 enemy.hit = function(self, damage, x, y)
   self.hp = self.hp - damage
-  local bump = vector(x, y, self.position.x, self.position.y)%(damage*15+50)
+  local bump = vector(x, y, self.position.x, self.position.y)%((damage+3)*5)
   self.velocity = self.velocity + bump
   if self.hp <= 0 then
     self:die()
