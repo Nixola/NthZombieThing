@@ -20,4 +20,17 @@ Weapons:
 What's to say here? Oh right, an incoming features list!
 * None! I'll probably accept feature requests though
 
+If anyone wanted to contribute, I could really use some art:
+* The most needed thing is the art for the powerups. They should be 90x90 or 96x96 (90x90 is better) icons, representing something related to their effect:
+  * increase max HPs
+  * increase damage
+  * increase speed
+  * decrease spread
+  * increase critical chance
+  * increase critical damage
+  * greatly improves a random weapon
+  * strengthen the enemies
+* I might need some art for the player and the zombies as well (which should be mainly circular)
+* and maybe some art for the weapons? Small, 16x16 icons for each (or maybe not, not sure they'd fit) and graphics for them in the actual game.
+
 That's it. Yay!
