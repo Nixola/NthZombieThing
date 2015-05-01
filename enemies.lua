@@ -97,11 +97,12 @@ enemies.draw = function(self)
   end
 
   --and debug show their stuff
+  --[[
   lg.setColor(255,255,255)
   for i, enemy in ipairs(self) do
     local x, y = enemy.position:unpack()
     lg.print(enemy.velocity:length(), x, y)
-  end
+  end--]]
 
 end
 
