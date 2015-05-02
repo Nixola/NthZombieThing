@@ -31,7 +31,8 @@ local player = {
   levelChoices = {points = 0},
   hp = {max = 100, current = 100},
   particles = {
-    health = require 'particles.health'
+    health = require 'particles.health',
+    levelup = require 'particles.levelup'
   },
   weapons = require 'player.weapons'
 }
@@ -124,6 +125,7 @@ player.getExp = function(self, amount)
   while self.experience >= self.level*10 do
     self.experience = self.experience - self.level*10
     self.level = self.level + 1
+    self.particles.levelup:start()
     enemies.level = enemies.level + 1
     self.levelChoices.points = self.levelChoices.points + 1
     self.levelChoices:refresh()
@@ -188,6 +190,9 @@ player.drawHud = function(self)
       lg.rectangle("line", x, y, 88+96, self.hud.height - 44)
       lg.printf(self.levelChoices[i].desc, 4+x+96, y + 4, 80)
     end
+
+    lg.rectangle('line', W - 96, self.hud.y + 40, 88, self.hud.height - 44)
+    lg.printf(self.levelChoices[0].desc, W - 88, self.hud.y + 44, 80)
   end
 
   for i = 1, #self.weapons.list do
