@@ -10,11 +10,11 @@ c = function(t)
   return setmetatable(t, {__index = weapons})
 end
 weapons.list = {"gun", "uzi", "sniper", "shotgun", "laser"}
-weapons.gun = {name = "Handgun",         damage = 25,  magazine = 6,   reload = 1.5, duration = .3,   rate = 2,  spread = .06, bullets = 1,  pierce = 1,  critical = {chance = .1, damage = 1.5},  level = 0, autofire = false} -- Handgun
-weapons.uzi = {name = "Uzi",             damage = 4,   magazine = 30,  reload = 1,   duration = 1/15, rate = 15, spread = .1,  bullets = 1,  pierce = 1,  critical = {chance = .08, damage = 2},   level = 0, autofire = true}  -- Uzi
-weapons.sniper = {name = "Sniper rifle", damage = 100, magazine = 4,   reload = 2,   duration = 1,    rate = .5, spread = 0,   bullets = 1,  pierce = 1,  critical = {chance = .2, damage = 3},    level = 0, autofire = false} -- Sniper rifle
-weapons.shotgun = {name = "Shotgun",     damage = 5,   magazine = 75,  reload = 1.5, duration = 1,    rate = 1,  spread = .2,  bullets = 15, pierce = 1,  critical = {chance = .08, damage = 1.5}, level = 0, autofire = false} -- Shotgun
-weapons.laser = {name = "Laser",         damage = 20,  magazine = 6/0, reload = 0,   duration = .25,  rate = .5, spread = .05, bullets = 1,  pierce = 10, critical = {chance = 1, damage = 1},     level = 0, autofire = true}  -- Laser
+weapons.gun = {name = "Handgun",         damage = 25,  magazine = 6,   reload = 1.5, duration = .3,   rate = 2,  spread = .06,                                           critical = {chance = .1, damage = 1.5},  level = 0, autofire = false, continuous = false} -- Handgun
+weapons.uzi = {name = "Uzi",             damage = 4,   magazine = 30,  reload = 1,   duration = 1/15, rate = 15, spread = .1,                                            critical = {chance = .08, damage = 2},   level = 0, autofire = true,  continuous = false}  -- Uzi
+weapons.sniper = {name = "Sniper rifle", damage = 80,  magazine = 4,   reload = 2,   duration = 1,    rate = .5, spread = .03,                pierce = {n = 5,  d = .5}, critical = {chance = .2, damage = 3},    level = 0, autofire = false, continuous = false} -- Sniper rifle
+weapons.shotgun = {name = "Shotgun",     damage = 5,   magazine = 75,  reload = 1.5, duration = 1,    rate = 1,  spread = .2,  bullets = 15,                             critical = {chance = .08, damage = 1.5}, level = 0, autofire = false, continuous = false} -- Shotgun
+weapons.laser = {name = "Laser",         damage = 30,  magazine = 100, reload = 1.5, duration = 0,    rate = 0,  spread = .01,                pierce = {n = 10, d = 1},  critical = {chance = 0, damage = 1},     level = 0, autofire = true,  continuous = 66.666}  -- Laser
 
 
 weapons.lines = {}
@@ -27,7 +27,7 @@ weapons.setPlayer = function(self, player)
 end
 
 weapons.set = function(self, name)
-  if (self.current.timer < 1/self.current.rate) or self.current.reloading then return end
+  if (self.current.timer < 1/self.current.rate and not self.current.continuous) or self.current.reloading then return end
 
   if tonumber(name) then name = self.list[tonumber(name)] end
 
@@ -38,22 +38,26 @@ weapons.set = function(self, name)
   self.current.rate = new.rate
   self.current.autofire = new.autofire
   self.current.spread = new.spread
-  self.current.bullets = new.bullets
-  self.current.pierce = new.pierce
+  self.current.bullets = new.bullets or 1
+  self.current.pierce = new.pierce or {n = 1, d = 1}
   self.current.critical = new.critical
   self.current.magazine = new.magazine
   self.current.ammo = new.magazine
   self.current.reload = new.reload
   self.current.level = new.level
+  self.current.continuous = new.continuous
 end
 
 
 weapons.update = function(self, dt)
-  if self.current.autofire and self.current.timer > 1/self.current.rate and lm.isDown 'l' and not self.current.reloading then
+  if (self.current.autofire and self.current.timer > 1/self.current.rate or self.current.continuous) and lm.isDown 'l' and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
-      self:shoot(lm.getPosition())
+      self:shoot(dt, lm.getPosition())
     end
+    self.current.shooting = true
+  else
+    self.current.shooting = false
   end
   self.current.timer = self.current.timer + dt
   self.current.reloading = self.current.reloading and self.current.reloading - dt
@@ -65,23 +69,23 @@ end
 
 
 weapons.draw = function(self)
-  if self.current.timer < self.current.duration then
+  if self.current.timer < self.current.duration or (self.current.continuous and self.current.shooting) then
     for i, v in ipairs(self.lines) do
-      lg.setColor(255, v.critical and 0 or 255, v.critical and 0 or 255, (1-self.current.timer/self.current.duration)*255)
+      lg.setColor(255, v.critical and 0 or 255, v.critical and 0 or 255, self.current.continuous and 255 or (1-self.current.timer/self.current.duration)*255)
       local x1, y1, x2, y2 = v:unpack()
       lg.line(x2 and x1 or 0, y2 and y1 or 0, x2 or x1, y2 or y1)
     end
-    --local v = vector(self.shot.px, self.shot.py, self.shot.x, self.shot.y)  % (self.shot.distance or 1100)
 
   end
 
 end
 
 
-weapons.shoot = function(self, x, y)
+weapons.shoot = function(self, dt, x, y)
+  dt = self.current.continuous and dt or 1
   if self.current.reloading then return end
-  self.current.ammo = self.current.ammo - 1
-  if self.current.ammo == 0 then
+  self.current.ammo = self.current.ammo - dt * (self.current.continuous or 1)
+  if self.current.ammo <= 0 then
     self.current.reloading = self.current.reload
   end
   self.current.timer = 0
@@ -116,10 +120,10 @@ weapons.shoot = function(self, x, y)
       local pos2 = (-b + Delta^.5)/(2*a)
       if (0 <= pos1) or (0 <= pos2) then
         targets[#targets+1] = enemy
-        --enemy.distance = vector(p.x, p.y, enemy.position.x, enemy.position.y):length()
         enemy.distance = vector(p.x, p.y, x, y):length()*pos1
       end
     end
+
   end
 
   table.sort(targets, function(a, b) return a.distance > b.distance end)
@@ -135,10 +139,13 @@ weapons.shoot = function(self, x, y)
 
   if targets[#targets] then
     local lastTarget
-    local pierce = self.current.pierce
+    local pierce = self.current.pierce.n
+    local damage = self.current.pierce.d
+    local d = 1
 
     while pierce >= 1 and targets[#targets] do
-      targets[#targets]:hit(self.current.damage, p.x, p.y)
+      targets[#targets]:hit(self.current.damage*d*dt, p.x, p.y)
+      d = d * damage
       lastTarget = targets[#targets]
       pierce = pierce - 1
       table.remove(targets, #targets)
@@ -148,14 +155,13 @@ weapons.shoot = function(self, x, y)
 
     if pierce == 0 then
       line = vector(p.x, p.y, x, y)%lastTarget.distance
-      line.critical = critical
     else
-      line = vector(p.x, p.y, x, y)%1100
-      line.critical = critical
+      line = vector(p.x, p.y, x, y)% 1100
     end
+    line.critical = critical
     self.lines[#self.lines+1] = line
   else
-    self.lines[#self.lines+1] = vector(p.x, p.y, x, y)%1100
+    self.lines[#self.lines+1] = vector(p.x, p.y, x, y)% 1100
   end
 end
 
@@ -165,7 +171,7 @@ weapons.mousepressed = function(self, x, y, b)
   if not self.current.autofire and self.current.timer > 1/self.current.rate and b == 'l' and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
-      self:shoot(lm.getPosition())
+      self:shoot(1, lm.getPosition())
     end
   end
 
