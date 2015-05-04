@@ -37,3 +37,7 @@ img.arc = function(self, fraction)
   arc:setDrawRange(2, n+2)
   return arc
 end
+
+local imgD = love.image.newImageData(1,1)
+imgD:setPixel(0,0,255,255,255,255)
+img.white = love.graphics.newImage(imgD)
