@@ -22,7 +22,6 @@ love.load = function()
   enemies:load()
 end
 
-local t1, t2, t3, t4, t5, t6, t7
 love.update = function(dt)
   player:update(dt)
   camera:update(dt)
@@ -31,7 +30,6 @@ end
 
 
 love.draw = function()
-  t1 = t()
   camera:set()
   
     lg.setColor(192,32,32)
@@ -40,26 +38,17 @@ love.draw = function()
         lg.rectangle('fill', (math.floor(player.x/400) + x) * 400, (math.floor(player.y/300) + y)*300, 16, 16) --just some squares to know where you're going
       end
     end
-    t2 = t()
+
     drops:draw()
-    t3 = t()
+
     player:draw()
-    t4 = t()
+
     enemies:draw()
-    t5 = t()
+
   camera:unset()
 
-  t6 = t()
   player:drawHud()
-  t7 = t()
-  local d1 = t2-t1--set camera, draw "floor"
-  local d2 = t3-t2--draw drops
-  local d3 = t4-t3--draw player
-  local d4 = t5-t4--draw enemies
-  local d5 = t7-t6--draw hud
-  local dtot = t7-t1
-  print(string.format("%d%% %d%% %d%% %d%% %d%%", d1/dtot*100, d2/dtot*100, d3/dtot*100, d4/dtot*100, d5/dtot*100))
-  --print(t1,t2,t3,'\n', ut,dt, '\n')
+
 end
 
 
