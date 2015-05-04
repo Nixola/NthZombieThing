@@ -60,13 +60,14 @@ hud.levelup.draw = function(self, total)
   lg.rectangle("fill", self.x, self.y, self.w, self.h)
 
   if p.levelChoices.points > 0 then
+    lg.setColor(192,192,192)
     for i = 1, 3 do
-      local x = self.x + 192*(i-1)
-      lg.rectangle("line", x, self.y+4, 88+96, self.h-8)
+      local x = self.x + 192*(i-1)+1
+      lg.rectangle("line", x, self.y+2, 88+96, self.h-4)
       lg.printf(p.levelChoices[i].desc, 4+x+96, self.y + 4, 80)
     end
 
-    lg.rectangle('line', hud.width - 96, self.y+4, 88, self.h-8)
+    lg.rectangle('line', hud.width - 96, self.y+2, 88, self.h-4)
     lg.printf(p.levelChoices[0].desc, W - 88, self.y + 4, 80)
   end
 
@@ -92,6 +93,7 @@ end
 
 hud.init = function(self)
   lg.setCanvas(self.canvas)
+    self.canvas:clear(self.bg)
     self.hp:draw(true)
     self.exp:draw(true)
     self.ammo:draw(true)

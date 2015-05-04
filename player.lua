@@ -194,6 +194,7 @@ player.levelChoices.refresh = function(self)
       self[i] = nil
     end
     self[0] = nil
+    player.hud.levelup:draw()
     return
   end
   local choices = love.filesystem.load 'player/levelup.lua' ()

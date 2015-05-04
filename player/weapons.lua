@@ -52,7 +52,7 @@ end
 
 
 weapons.update = function(self, dt)
-  if (self.current.autofire and self.current.timer > 1/self.current.rate or self.current.continuous) and lm.isDown(1) and not self.current.reloading then
+  if (self.current.autofire and self.current.timer > 1/self.current.rate or self.current.continuous) and lm.isDown((love.vM == 0 and love.vm == 9) and 'l' or 1) and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
       self:shoot(dt, lm.getPosition())
@@ -171,7 +171,7 @@ end
 
 weapons.mousepressed = function(self, x, y, b)
 
-  if not self.current.autofire and self.current.timer > 1/self.current.rate and b == 1 and not self.current.reloading then
+  if not self.current.autofire and self.current.timer > 1/self.current.rate and (b == (love.vM == 0 and love.vm == 9) and 'l' or 1) and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
       self:shoot(1, lm.getPosition())
