@@ -13,14 +13,14 @@ local p
 
 enemies.load = function(self)
 
-            enemies.hp = 90
-        enemies.damage = 11
+  enemies.hp = 90
+  enemies.damage = 11
   enemies.damageSpread = .2
-      enemies.maxSpeed = 135
+  enemies.maxSpeed = 135
   enemies.acceleration = 2500
-             enemies.r = 18
-         enemies.level = 1
-         p = require 'player'
+  enemies.r = 18
+  enemies.level = 1
+  p = require 'player'
 end
 
 enemies.spawn = function(self, X, Y)
@@ -88,14 +88,16 @@ enemies.draw = function(self)
   lg.setColor(255,0,0)
   for i, enemy in ipairs(self) do
     local x, y = enemy.position:unpack()
-    lg.arc('fill', x, y, enemy.r, 0, enemy.hp/enemy.maxHP*2*math.pi, enemy.r)
+    --lg.arc('fill', x, y, enemy.r, 0, enemy.hp/enemy.maxHP*2*math.pi, enemy.r)
+    lg.draw(img:arc(enemy.hp/enemy.maxHP), x, y, 0, enemy.r, enemy.r)
   end
 
   --and now draw them
   lg.setColor(16, 92, 16)
   for i, enemy in ipairs(self) do
     local x,y = enemy.position:unpack()
-    lg.circle('fill', x, y, enemy.r-1, enemy.r)
+    --lg.circle('fill', x, y, enemy.r-1, enemy.r)
+    lg.draw(img.circle, x, y, 0, enemy.r-1, enemy.r-1)
   end
 
   --and debug show their stuff

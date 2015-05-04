@@ -80,7 +80,7 @@ hud.weapons.draw = function(self, total)
   if not total then lg.setCanvas(hud.canvas) end
   lg.setColor(hud.bg)
   lg.rectangle("fill", self.x, self.y, self.w, self.h)
-  
+
   if not p then return end
 
   for i = 1, #p.weapons.list do
@@ -93,8 +93,7 @@ hud.weapons.draw = function(self, total)
 end
 
 hud.init = function(self)
-  lg.setCanvas(self.canvas)
-    self.canvas:clear(self.bg)
+    lg.rectangle("fill", 0, 0, self.width, self.height)
     self.hp:draw(true)
     self.exp:draw(true)
     --self.ammo:draw(true)

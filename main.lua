@@ -1,3 +1,6 @@
+love.vM, love.vm = love.getVersion()
+
+
 require 'images'
 
 local t = love.timer.getTime
@@ -58,8 +61,6 @@ love.keypressed = function(k)
     spawning = not spawning
   end
 end
-
-love.vM, love.vm = love.getVersion()
 
 love.mousepressed = function(x, y, b)
   weapons:mousepressed(x,y,b)
