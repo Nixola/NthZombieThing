@@ -30,7 +30,7 @@ weapons.set = function(self, name)
   if (self.current.timer < 1/self.current.rate and not self.current.continuous) or self.current.reloading then return end
 
   if tonumber(name) then name = self.list[tonumber(name)] end
-
+  
   local new = self[name]
   self.current.name = new.name
   self.current.damage = new.damage*p.damage
@@ -46,15 +46,18 @@ weapons.set = function(self, name)
   self.current.reload = new.reload
   self.current.level = new.level
   self.current.continuous = new.continuous
+
+  p.hud.weapons:draw()
 end
 
 
 weapons.update = function(self, dt)
-  if (self.current.autofire and self.current.timer > 1/self.current.rate or self.current.continuous) and lm.isDown 'l' and not self.current.reloading then
+  if (self.current.autofire and self.current.timer > 1/self.current.rate or self.current.continuous) and lm.isDown(1) and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
       self:shoot(dt, lm.getPosition())
     end
+    p.hud.ammo:draw()
     self.current.shooting = true
   else
     self.current.shooting = false
@@ -168,11 +171,12 @@ end
 
 weapons.mousepressed = function(self, x, y, b)
 
-  if not self.current.autofire and self.current.timer > 1/self.current.rate and b == 'l' and not self.current.reloading then
+  if not self.current.autofire and self.current.timer > 1/self.current.rate and b == 1 and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
       self:shoot(1, lm.getPosition())
     end
+    p.hud.ammo:draw()
   end
 
 end

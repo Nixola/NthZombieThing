@@ -8,7 +8,7 @@ end
 
 local enemies = {}
 local enemy = enemies
-local W, H = love.window.getDimensions()
+local W, H = love.graphics.getDimensions()
 local p
 
 enemies.load = function(self)

@@ -6,7 +6,7 @@ camera.shake = {
   duration = 1
 }
 
-local W, H = love.window.getDimensions()
+local W, H = love.graphics.getDimensions()
 camera.viewport = {W,H}
 
 camera.setViewport = function(self, x, y)

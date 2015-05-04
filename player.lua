@@ -5,7 +5,7 @@ local circleColl = function(x1,y1,r1, x2,y2,r2)
   return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) <= (r2+r1)*(r2+r1)
 end
 
-local W, H = love.window.getDimensions()
+local W, H = love.graphics.getDimensions()
 
 local vector = require 'vecturr'
 local enemies = require 'enemies'
@@ -37,10 +37,8 @@ local player = {
   weapons = require 'player.weapons'
 }
 
-player.hud = {
-  height = 128
-}
-player.hud.y = H - player.hud.height
+player.hud = require 'player.hud'
+--player.hud:setPlayer(player)
 
 player.setCamera = function(self, t)
   self.camera = t
@@ -49,8 +47,10 @@ end
 player.load = function(self)
   self.camera:setViewport(nil, self.hud.y)
 
-  player.weapons:setPlayer(player)
-  player.weapons:set "gun"
+  self.weapons:setPlayer(player)
+  self.weapons:set "gun"
+  print(self.weapons.current.ammo)
+  self.hud:setPlayer(self)
 
 end
 
@@ -130,6 +130,7 @@ player.getExp = function(self, amount)
     self.levelChoices.points = self.levelChoices.points + 1
     self.levelChoices:refresh()
   end
+  self.hud.exp:draw()
 
 end
 
@@ -140,6 +141,7 @@ player.hit = function(self, damage, x, y)
   self.camera.shake(damage/5)
   local direction = vector(x, y, self.x, self.y)%(damage*100)
   self.velocity = self.velocity + direction
+  self.hud.hp:draw()
 end
 
 
@@ -148,6 +150,7 @@ player.heal = function(self, amount)
   self.hp.current = math.min(self.hp.current + amount, self.hp.max)
   self.particles.health:setEmissionRate(amount)
   self.particles.health:start()
+  self.hud.hp:draw()
   
 end
 
@@ -168,39 +171,8 @@ end
 
 player.drawHud = function(self)
 
-  lg.setColor(32,32,32)
-  lg.rectangle('fill', 0, self.hud.y, lg.getWidth(), self.hud.height)
-
-  lg.setColor(255 * (1 - self.hp.current / self.hp.max ), 255 / self.hp.max * self.hp.current , 0)
-  lg.print("HP: " .. math.floor(self.hp.current) .. "/" .. math.floor(self.hp.max), 0, self.hud.y)
-
-  lg.setColor(128 + self.experience/self.level/10*96, 128 + self.experience/self.level/10*96, 255)
-  lg.print("XP: " .. self.experience .. "/" .. self.level*10, 0, self.hud.y + 16)
-
-  lg.setColor(192,192,0)
-  lg.printf("LV " .. self.level, 0, self.hud.y + 16, 92, "right")
-
-  lg.setColor(192,192,192)
-  lg.print("Ammo: " .. math.ceil(weapon.ammo / weapon.bullets) .. "/" .. math.ceil(weapon.magazine / weapon.bullets), 0, self.hud.y + 32)
-
-  if self.levelChoices.points > 0 then 
-    for i = 1, 3 do
-      local x = 96 + 192*(i-1)
-      local y = self.hud.y + 40
-      lg.rectangle("line", x, y, 88+96, self.hud.height - 44)
-      lg.printf(self.levelChoices[i].desc, 4+x+96, y + 4, 80)
-    end
-
-    lg.rectangle('line', W - 96, self.hud.y + 40, 88, self.hud.height - 44)
-    lg.printf(self.levelChoices[0].desc, W - 88, self.hud.y + 44, 80)
-  end
-
-  for i = 1, #self.weapons.list do
-    local weapon = self.weapons[self.weapons.list[i]]
-    lg.setColor((weapon.name == self.weapons.current.name) and {224, 224, 224} or {160, 160, 160})
-    lg.rectangle("line", 96*i, self.hud.y + 8, 88, 24)
-    lg.print(weapon.name .. ((weapon.level > 0) and (" +" .. weapon.level) or ''), 4+96*i, self.hud.y+12)
-  end
+  lg.setColor(255,255,255)
+  lg.draw(self.hud.canvas, self.hud.x, self.hud.y)
 
 end
 
@@ -236,7 +208,7 @@ player.levelChoices.refresh = function(self)
     table.remove(choices, choice)
   end
   self[0] = choices[0]
-
+  player.hud.levelup:draw()
 end
 
 
