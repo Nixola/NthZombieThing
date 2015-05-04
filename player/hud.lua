@@ -42,6 +42,7 @@ hud.exp.draw = function(self, total)
 end
 
 hud.ammo = {x = 0, y = 32, h = 16, w = 96}
+--[[
 hud.ammo.draw = function(self, total)
   if not total then lg.setCanvas(hud.canvas) end
   lg.setColor(hud.bg)
@@ -51,7 +52,7 @@ hud.ammo.draw = function(self, total)
   lg.setColor(192,192,192)
   lg.print("Ammo: " .. math.ceil(weapon.ammo / weapon.bullets) .. "/" .. math.ceil(weapon.magazine / weapon.bullets), 0, self.y)
   if not total then lg.setCanvas() end
-end
+end--]]
 
 hud.levelup = {x = 96, y = 40, w = hud.width-96, h = hud.height-44}
 hud.levelup.draw = function(self, total)
@@ -96,7 +97,7 @@ hud.init = function(self)
     self.canvas:clear(self.bg)
     self.hp:draw(true)
     self.exp:draw(true)
-    self.ammo:draw(true)
+    --self.ammo:draw(true)
     self.levelup:draw(true)
     self.weapons:draw(true)
   lg.setCanvas()

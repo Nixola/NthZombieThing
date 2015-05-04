@@ -57,7 +57,7 @@ weapons.update = function(self, dt)
     for i = 1, self.current.bullets do
       self:shoot(dt, lm.getPosition())
     end
-    p.hud.ammo:draw()
+    --p.hud.ammo:draw()
     self.current.shooting = true
   else
     self.current.shooting = false
@@ -176,7 +176,7 @@ weapons.mousepressed = function(self, x, y, b)
     for i = 1, self.current.bullets do
       self:shoot(1, lm.getPosition())
     end
-    p.hud.ammo:draw()
+    --p.hud.ammo:draw()
   end
 
 end

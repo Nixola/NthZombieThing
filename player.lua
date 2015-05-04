@@ -49,7 +49,6 @@ player.load = function(self)
 
   self.weapons:setPlayer(player)
   self.weapons:set "gun"
-  print(self.weapons.current.ammo)
   self.hud:setPlayer(self)
 
 end
@@ -173,6 +172,10 @@ player.drawHud = function(self)
 
   lg.setColor(255,255,255)
   lg.draw(self.hud.canvas, self.hud.x, self.hud.y)
+
+  local weapon = self.weapons.current
+  lg.setColor(192,192,192)
+  lg.print("Ammo: " .. math.ceil(weapon.ammo / weapon.bullets) .. "/" .. math.ceil(weapon.magazine / weapon.bullets), self.hud.ammo.x+self.hud.x, self.hud.ammo.y+self.hud.y)
 
 end
 
