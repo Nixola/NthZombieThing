@@ -1,4 +1,5 @@
 love.vM, love.vm = love.getVersion()
+love.graphics.setLineJoin "none"
 
 
 require 'images'
@@ -13,7 +14,7 @@ local drops = require 'drops'
 
 local setColor = love.graphics.setColor
 
-io.stdout:setvbuf 'line'
+io.stdout:setvbuf 'no'
 
 local lk = love.keyboard
 local lg = love.graphics

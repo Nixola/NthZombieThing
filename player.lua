@@ -38,7 +38,6 @@ local player = {
 }
 
 player.hud = require 'player.hud'
---player.hud:setPlayer(player)
 
 player.setCamera = function(self, t)
   self.camera = t
@@ -157,11 +156,11 @@ player.draw = function(self)
 
   if self.weapons.current.reloading then
     lg.setColor(128,128,192)
-    lg.arc("fill", self.x, self.y, self.r+2, 0, self.weapons.current.reloading/self.weapons.current.reload * 2 * math.pi)
+    lg.draw(img:arc(self.weapons.current.reloading/self.weapons.current.reload), self.x, self.y, 0, self.r, self.r)
   end
 
   lg.setColor(192,192,192)
-  lg.circle("fill", self.x, self.y, self.r, self.r)
+  lg.draw(img.circle, self.x, self.y, 0, self.r, self.r)
   for i, particleSystem in pairs(self.particles) do
     lg.draw(particleSystem)
   end
@@ -187,6 +186,7 @@ player.keypressed = function(self, k)
     self.levelChoices[bindings[k]].func(self, self.weapons, enemies)
     self.levelChoices.points = self.levelChoices.points - 1
     self.levelChoices:refresh()
+    self.hud:init()
   end
 end
 
