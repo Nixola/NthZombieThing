@@ -23,8 +23,8 @@ img.circle = love.graphics.newMesh(t)
 local arc = love.graphics.newMesh(t)
 
 if love.vm == 9 and love.vM == 0 then
-  img.circle:setVertexColor(false)
-  arc:setVertexColor(false)
+  img.circle:setVertexColors(false)
+  arc:setVertexColors(false)
 elseif love.vm == 10 and love.vM == 0 then
   img.circle:setAttributeEnabled("VertexColor", false)
   arc:setAttributeEnabled("VertexColor", false)
