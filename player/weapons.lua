@@ -162,9 +162,10 @@ weapons.shoot = function(self, dt, x, y)
     table.remove(targets, #targets)
   end
 
-  local damage, critical = self.current.damage, false
-  if love.math.random() <= self.current.critical.chance*p.critical.chance then
-    damage = damage * self.current.critical.damage * p.critical.damage
+  local Odamage, critical = self.current.damage, false
+  if love.math.random() <= self.current.critical.chance*p.critical.chance then      
+    print(Odamage, self.current.critical.damage, p.critical.damage)
+    Odamage = Odamage * self.current.critical.damage * p.critical.damage
     critical = true
   end
 
@@ -175,7 +176,7 @@ weapons.shoot = function(self, dt, x, y)
     local d = 1
 
     while pierce >= 1 and targets[#targets] do
-      targets[#targets]:hit(self.current.damage*d*dt, p.x, p.y)
+      targets[#targets]:hit(Odamage*d*dt, p.x, p.y)
       d = d * damage
       lastTarget = targets[#targets]
       pierce = pierce - 1
