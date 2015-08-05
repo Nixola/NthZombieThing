@@ -156,11 +156,11 @@ player.draw = function(self)
 
   if self.weapons.current.reloading then
     lg.setColor(128,128,192)
-    lg.draw(img:arc(self.weapons.current.reloading/self.weapons.current.reload), self.x, self.y, 0, self.r, self.r)
+    lg.draw(img:arc(self.weapons.current.reloading/self.weapons.current.reload), self.x, self.y, 0, self.r+2)
   end
 
   lg.setColor(192,192,192)
-  lg.draw(img.circle, self.x, self.y, 0, self.r, self.r)
+  lg.draw(img.circle, self.x, self.y, 0, self.r)
   for i, particleSystem in pairs(self.particles) do
     lg.draw(particleSystem)
   end
