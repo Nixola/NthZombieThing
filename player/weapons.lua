@@ -164,7 +164,7 @@ weapons.shoot = function(self, dt, x, y)
 
   local Odamage, critical = self.current.damage, false
   if love.math.random() <= self.current.critical.chance*p.critical.chance then      
-    print(Odamage, self.current.critical.damage, p.critical.damage)
+    --print(Odamage, self.current.critical.damage, p.critical.damage)
     Odamage = Odamage * self.current.critical.damage * p.critical.damage
     critical = true
   end
