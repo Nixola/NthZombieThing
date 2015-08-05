@@ -9,7 +9,8 @@ local weapons = {}
 c = function(t)
   return setmetatable(t, {__index = weapons})
 end
-weapons.list = {"gun", "uzi", "sniper", "shotgun", "laser"}
+weapons.list = {"gun", "uzi", "sniper", "shotgun", "laser",
+                gun=1, uzi=2, sniper=3, shotgun=4, laser=5}
 weapons.gun = {name = "Handgun",         damage = 25,  magazine = 6,   reload = 1.5, duration = .3,   rate = 2,  spread = .06,                                           critical = {chance = .1, damage = 1.5},  level = 0, autofire = false, continuous = false} -- Handgun
 weapons.uzi = {name = "Uzi",             damage = 4,   magazine = 30,  reload = 1,   duration = 1/15, rate = 15, spread = .1,                                            critical = {chance = .08, damage = 2},   level = 0, autofire = true,  continuous = false}  -- Uzi
 weapons.sniper = {name = "Sniper rifle", damage = 80,  magazine = 4,   reload = 2,   duration = 1,    rate = .5, spread = .03,                pierce = {n = 5,  d = .5}, critical = {chance = .2, damage = 3},    level = 0, autofire = false, continuous = false} -- Sniper rifle
@@ -33,6 +34,7 @@ weapons.set = function(self, name)
   
   local new = self[name]
   self.current.name = new.name
+  self.current.id = self.list[name]
   self.current.damage = new.damage*p.damage
   self.current.duration = new.duration
   self.current.rate = new.rate
@@ -198,8 +200,7 @@ end
 
 
 weapons.mousepressed = function(self, x, y, b)
-
-  if not self.current.autofire and self.current.timer > 1/self.current.rate and (b == (love.vM == 0 and love.vm == 9) and 'l' or 1) and not self.current.reloading then
+  if not self.current.autofire and self.current.timer > 1/self.current.rate and (b == ((love.vM == 0 and love.vm == 9) and 'l' or 1)) and not self.current.reloading then
     self.lines = {}
     for i = 1, self.current.bullets do
       self:shoot(1, lm.getPosition())

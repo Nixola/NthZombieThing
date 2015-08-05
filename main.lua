@@ -64,5 +64,10 @@ love.keypressed = function(k)
 end
 
 love.mousepressed = function(x, y, b)
-  weapons:mousepressed(x,y,b)
+  weapons:mousepressed(x, y, b)
+  player:mousepressed(x, y, b)
+end
+
+love.wheelmoved = function(x, y)
+  player:wheelmoved(x, y)
 end

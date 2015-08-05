@@ -190,6 +190,32 @@ player.keypressed = function(self, k)
   end
 end
 
+player.mousepressed = function(self, x, y, b)
+  if b == "wu" then
+    local id = player.weapons.current.id
+    id = id + 1
+    if id > #player.weapons.list then
+      id = id - #player.weapons.list
+    end
+    player.weapons:set(id)
+  elseif b == "wd" then
+    local id = player.weapons.current.id
+    id = id - 1
+    if id == 0 then
+      id = #player.weapons.list
+    end
+    player.weapons:set(id)
+  end
+end
+
+player.wheelmoved = function(self, x, y)
+  if y > 0 then
+    self:mousepressed(nil, nil, "wu")
+  elseif y < 0 then
+    self:mousepressed(nil, nil, "wd")
+  end
+end
+
 
 player.levelChoices.refresh = function(self)
   if self.points == 0 then
