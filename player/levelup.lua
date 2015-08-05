@@ -46,6 +46,7 @@ local choices = {
     weapon.critical.chance = weapon.critical.chance * 1.1
     weapon.critical.damage = weapon.critical.damage * 1.1
     weapon.level = weapon.level + 1
+    player.hud.weapons:draw()
   end,
   desc = "Increases by 10% EVERY attribute of a random weapon.",
   condition = function(player, weapons, enemies) return love.math.random(4) == 1 end}
