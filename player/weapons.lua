@@ -11,11 +11,11 @@ c = function(t)
 end
 weapons.list = {"gun", "uzi", "sniper", "shotgun", "laser",
                 gun=1, uzi=2, sniper=3, shotgun=4, laser=5}
-weapons.gun = {name = "Handgun",         damage = 25,  magazine = 6,   reload = 1.5, duration = .3,   rate = 2,  spread = .06,                                           critical = {chance = .1, damage = 1.5},  level = 0, autofire = false, continuous = false} -- Handgun
-weapons.uzi = {name = "Uzi",             damage = 4,   magazine = 30,  reload = 1,   duration = 1/15, rate = 15, spread = .1,                                            critical = {chance = .08, damage = 2},   level = 0, autofire = true,  continuous = false}  -- Uzi
-weapons.sniper = {name = "Sniper rifle", damage = 80,  magazine = 4,   reload = 2,   duration = 1,    rate = .5, spread = .03,                pierce = {n = 5,  d = .5}, critical = {chance = .2, damage = 3},    level = 0, autofire = false, continuous = false} -- Sniper rifle
-weapons.shotgun = {name = "Shotgun",     damage = 5,   magazine = 75,  reload = 1.5, duration = 1,    rate = 1,  spread = .2,  bullets = 15,                             critical = {chance = .08, damage = 1.5}, level = 0, autofire = false, continuous = false} -- Shotgun
-weapons.laser = {name = "Laser",         damage = 30,  magazine = 100, reload = 1.5, duration = 0,    rate = 0,  spread = .01,                pierce = {n = 10, d = 1},  critical = {chance = 0, damage = 1},     level = 0, autofire = true,  continuous = 66.666}  -- Laser
+weapons.gun = {name = "Handgun",         damage = 25,  magazine = 6,   reload = 1.5, duration = .3,   rate = 2,  spread = .06,                                           critical = {chance = .1, damage = 1.5},  level = 0, autofire = false, knockback = 100,  continuous = false} -- Handgun
+weapons.uzi = {name = "Uzi",             damage = 4,   magazine = 30,  reload = 1,   duration = 1/15, rate = 15, spread = .1,                                            critical = {chance = .08, damage = 2},   level = 0, autofire = true,  knockback = 50,   continuous = false}  -- Uzi
+weapons.sniper = {name = "Sniper rifle", damage = 80,  magazine = 4,   reload = 2,   duration = 1,    rate = .5, spread = .03,                pierce = {n = 5,  d = .5}, critical = {chance = .2, damage = 3},    level = 0, autofire = false, knockback = 550, continuous = false} -- Sniper rifle
+weapons.shotgun = {name = "Shotgun",     damage = 5,   magazine = 75,  reload = 1.5, duration = 1,    rate = 1,  spread = .2,  bullets = 15,                             critical = {chance = .08, damage = 1.5}, level = 0, autofire = false, knockback = 110,  continuous = false} -- Shotgun
+weapons.laser = {name = "Laser",         damage = 30,  magazine = 100, reload = 1.5, duration = 0,    rate = 0,  spread = .01,                pierce = {n = 10, d = 1},  critical = {chance = 0, damage = 1},     level = 0, autofire = true,  knockback = 7,   continuous = 66.666}  -- Laser
 
 
 weapons.lines = {}
@@ -48,6 +48,7 @@ weapons.set = function(self, name)
   self.current.reload = new.reload
   self.current.level = new.level
   self.current.continuous = new.continuous
+  self.current.knockback = new.knockback
 
   p.hud.weapons:draw()
 end
@@ -175,10 +176,12 @@ weapons.shoot = function(self, dt, x, y)
     local lastTarget
     local pierce = self.current.pierce.n
     local damage = self.current.pierce.d
+    local knock  = self.current.knockback
+    print(knock)
     local d = 1
 
     while pierce >= 1 and targets[#targets] do
-      targets[#targets]:hit(Odamage*d*dt, p.x, p.y)
+      targets[#targets]:hit(Odamage*d*dt, p.x, p.y, knock)
       d = d * damage
       lastTarget = targets[#targets]
       pierce = pierce - 1
