@@ -16,10 +16,11 @@ enemies.load = function(self)
   enemies.hp = 90
   enemies.damage = 11
   enemies.damageSpread = .2
-  enemies.maxSpeed = 135
-  enemies.acceleration = 2500
+  enemies.maxSpeed = 110
+  enemies.acceleration = 250
   enemies.r = 18
   enemies.level = 1
+  enemies.damping = 0.1
   p = require 'player'
 end
 
@@ -59,18 +60,22 @@ enemies.update = function(self, dt)
       table.remove(self, i)
     else
       enemy.a(enemy.position.x, enemy.position.y, p.x, p.y):scaleTo(enemy.acceleration)
-      
-      if enemy.velocity:length() + enemy.a:length()*dt > enemy.maxSpeed then
-        enemy.a:scaleTo(math.max(0, (enemy.maxSpeed-enemy.velocity:length())/dt))
-      end
+      --if enemy.velocity:length() + enemy.a:length()*dt > enemy.maxSpeed then
+        --enemy.a:scaleTo(math.max(0, (enemy.maxSpeed-enemy.velocity:length())/dt))
+      --end
+      enemy.velocity:scaleTo(enemy.velocity:length()*enemy.damping^dt)
       enemy.velocity = enemy.velocity + enemy.a*dt
+      if enemy.velocity:length() > enemy.maxSpeed then
+      	enemy.velocity:scaleTo(enemy.maxSpeed)
+      end
       for i, e2 in ipairs(self) do
         if not (enemy == e2) and circleColl(enemy.position.x, enemy.position.y, enemy.r, e2.position.x, e2.position.y, e2.r) then
-          e2:hit(0, enemy.position.x, enemy.position.y)
+          e2:hit(0, enemy.position.x, enemy.position.y, 20)
         end
       end
 
       enemy.position = enemy.position + enemy.velocity*dt
+      enemy.velocity = enemy.velocity * (1/dt)
 
       if circleColl(enemy.position.x, enemy.position.y, enemy.r, p.x, p.y, p.r) then
         p:hit(enemy.damage + enemy.damage * (love.math.random()-.5)*enemy.damageSpread, enemy.position:unpack())
@@ -111,9 +116,9 @@ enemies.draw = function(self)
 end
 
 
-enemy.hit = function(self, damage, x, y)
+enemy.hit = function(self, damage, x, y, knockback)
   self.hp = self.hp - damage
-  local bump = vector(x, y, self.position.x, self.position.y)%((damage+3)*5)
+  local bump = vector(x, y, self.position.x, self.position.y)%(knockback or (damage+3)*15)
   self.velocity = self.velocity + bump
   if self.hp <= 0 then
     self:die()
