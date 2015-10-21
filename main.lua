@@ -20,6 +20,8 @@ local lk = love.keyboard
 local lg = love.graphics
 
 love.load = function()
+  W, H = lg.getDimensions()
+  
   camera:follow(player)
   player:setCamera(camera)
   player:load()
@@ -34,6 +36,8 @@ end
 
 
 love.draw = function()
+  love.graphics.setColor(255,255,255)
+  love.graphics.print(love.timer.getFPS())
   camera:set()
   
     lg.setColor(192,32,32)
