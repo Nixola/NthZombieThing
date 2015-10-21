@@ -191,14 +191,14 @@ player.keypressed = function(self, k)
 end
 
 player.mousepressed = function(self, x, y, b)
-  if b == "wu" then
+  if b == "wd" then
     local id = player.weapons.current.id
     id = id + 1
     if id > #player.weapons.list then
       id = id - #player.weapons.list
     end
     player.weapons:set(id)
-  elseif b == "wd" then
+  elseif b == "wu" then
     local id = player.weapons.current.id
     id = id - 1
     if id == 0 then
