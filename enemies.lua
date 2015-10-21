@@ -16,8 +16,8 @@ enemies.load = function(self)
   enemies.hp = 90
   enemies.damage = 11
   enemies.damageSpread = .2
-  enemies.maxSpeed = 110
-  enemies.acceleration = 250
+  enemies.maxSpeed = 100
+  enemies.acceleration = 210
   enemies.r = 18
   enemies.level = 1
   enemies.damping = 0.1
@@ -28,10 +28,17 @@ enemies.spawn = function(self, X, Y)
   local e = setmetatable({}, {__index = self})
 
   local x, y 
+  --[[old, flawed, in-screen spawning
   repeat
     x = X or love.math.random(W) - W/2 + p.x
     y = Y or love.math.random(H) - H/2 + p.y
   until not circleColl(p.x, p.y, p.r*3, x, y, self.r*3)
+  --]]
+
+  --new, hopefully better, off-screen spawning
+  local a = love.math.random() * 2 * math.pi
+  local x = math.cos(a) * ((W*W + H*H)^.5 + self.r)
+  local y = math.sin(a) * ((W*W + H*H)^.5 + self.r)
 
   e.position = vector(x,y)
   e.velocity = vector(0,0)
