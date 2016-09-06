@@ -16,7 +16,7 @@ local weapon
 local bindings = {z = 1, x = 2, c = 3, ['0'] = 0}
 
 local player = {
-  x = 0,
+  x = 0.0001,
   y = 0,
   r = 24,
   velocity = vector(0,0),
@@ -169,16 +169,32 @@ end
 
 player.drawHud = function(self)
 
+  local weapon = self.weapons.current
+  local mx, my = love.mouse.getPosition()
+
   lg.setColor(255,255,255)
   lg.draw(self.hud.canvas, self.hud.x, self.hud.y)
 
-  local mx, my = love.mouse.getPosition()
-  lg.rectangle("fill", mx-1, my-8, 2, 16)
-  lg.rectangle("fill", mx-8, my-1, 16, 2)
-
-  local weapon = self.weapons.current
   lg.setColor(192,192,192)
   lg.print("Ammo: " .. math.ceil(weapon.ammo / weapon.bullets) .. "/" .. math.ceil(weapon.magazine / weapon.bullets), self.hud.ammo.x+self.hud.x, self.hud.ammo.y+self.hud.y)
+  
+  -- let's draw our crosshair here
+  lg.push()
+    lg.translate(mx, my)
+    lg.setLineWidth(2)
+    lg.setColor(255, 255, 255)
+    lg.line(-8, 0, 8, 0)
+    lg.line(0, -8, 0, 8)
+
+    --plus the other things that go on the crosshair
+    lg.setColor(192, 192, 0)
+    local ring = img:ring(9, weapon.ammo/weapon.magazine)
+    if ring[3] then --we need two vertices!
+      lg.line(ring)
+    end
+  lg.pop()
+  
+  
 
 end
 
