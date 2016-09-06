@@ -154,11 +154,6 @@ end
 
 player.draw = function(self)
 
-  if self.weapons.current.reloading then
-    lg.setColor(128,128,192)
-    lg.draw(img:arc(self.weapons.current.reloading/self.weapons.current.reload), self.x, self.y, 0, self.r+2)
-  end
-
   lg.setColor(192,192,192)
   lg.draw(img.circle, self.x, self.y, 0, self.r)
   for i, particleSystem in pairs(self.particles) do
@@ -187,11 +182,29 @@ player.drawHud = function(self)
     lg.line(0, -8, 0, 8)
 
     --plus the other things that go on the crosshair
-    lg.setColor(192, 192, 0)
-    local ring = img:ring(9, weapon.ammo/weapon.magazine)
+    local ring
+    if self.weapons.current.reloading then
+      lg.setColor(128,128,192)
+      --lg.draw(img:arc(self.weapons.current.reloading/self.weapons.current.reload), self.x, self.y, 0, self.r+2)
+      ring = img:ring(10, 1 - weapon.reloading/weapon.reload)
+    else
+      lg.setColor(192, 192, 0)
+      ring = img:ring(9, weapon.ammo/weapon.magazine)
+    end
     if ring[3] then --we need two vertices!
       lg.line(ring)
     end
+
+    local cooldown = weapon.timer * weapon.rate
+    if cooldown <= 1 and not weapon.continuous and not weapon.reloading then
+      ring = img:ring(6, 1 - cooldown)
+      lg.setColor(192, 0, 0)
+      if ring[3] then
+        lg.line(ring)
+      end
+    end
+
+
   lg.pop()
   
   
