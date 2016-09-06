@@ -34,7 +34,7 @@ local floor = math.floor
 
 img.arc = function(self, fraction)
   local n = floor(fraction * segments + .5)
-  arc:setDrawRange(2, n+2)
+  arc:setDrawRange(1, n+2)
   return arc
 end
 
