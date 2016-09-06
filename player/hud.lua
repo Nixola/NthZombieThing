@@ -62,6 +62,7 @@ hud.levelup.draw = function(self, total)
 
   if p.levelChoices.points > 0 then
     lg.setColor(192,192,192)
+    lg.setLineWidth(1)
     for i = 1, 3 do
       local x = self.x + 192*(i-1)+1
       lg.rectangle("line", x, self.y+2, 88+96, self.h-4)
@@ -82,6 +83,8 @@ hud.weapons.draw = function(self, total)
   lg.rectangle("fill", self.x, self.y, self.w, self.h)
 
   if not p then return end
+
+  lg.setLineWidth(1)
 
   for i = 1, #p.weapons.list do
     local weapon = p.weapons[p.weapons.list[i]]
