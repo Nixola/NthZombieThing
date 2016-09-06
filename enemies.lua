@@ -72,9 +72,16 @@ enemies.update = function(self, dt)
       --end
       enemy.velocity:scaleTo(enemy.velocity:length()*enemy.damping^dt)
       enemy.velocity = enemy.velocity + enemy.a*dt
+      --[[bad check; only checks for length.
+      --I need to check for speed along the needed direction.
       if enemy.velocity:length() > enemy.maxSpeed then
       	enemy.velocity:scaleTo(enemy.maxSpeed)
+      end--]]
+      local speedProj = (enemy.velocity * enemy.a) / enemy.a:length()
+      if speedProj > enemy.maxSpeed then
+        enemy.velocity:scaleTo(enemy.velocity:length() *  enemy.maxSpeed / speedProj)
       end
+
       for i, e2 in ipairs(self) do
         if not (enemy == e2) and circleColl(enemy.position.x, enemy.position.y, enemy.r, e2.position.x, e2.position.y, e2.r) then
           e2:hit(0, enemy.position.x, enemy.position.y, 20)
