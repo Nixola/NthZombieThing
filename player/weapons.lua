@@ -91,16 +91,17 @@ weapons.draw = function(self)
       t[l+3] = x2
       t[l+4] = y2
     end
+    local alpha = self.current.continuous and 255 or (1-self.current.timer/self.current.duration)^2*255
     if C[1] then
       C[#C+1] = C[1]
       C[#C+1] = C[2]
-      lg.setColor(255,0,0,self.current.continuous and 255 or (1-self.current.timer/self.current.duration)^2*255)
+      lg.setColor(255,0,0,alpha)
       lg.line(C)
     end
     if nonC[1] then
       nonC[#nonC+1] = nonC[1]
       nonC[#nonC+1] = nonC[2]
-      lg.setColor(255,255,255,self.current.continuous and 255 or (1-self.current.timer/self.current.duration)^2*255)
+      lg.setColor(255,255,255,alpha)
       lg.line(nonC)
     end
     --[[
