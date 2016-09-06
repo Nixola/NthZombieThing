@@ -21,6 +21,8 @@ local lg = love.graphics
 
 love.load = function()
   W, H = lg.getDimensions()
+
+  love.mouse.setVisible(false)
   
   camera:follow(player)
   player:setCamera(camera)

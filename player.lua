@@ -172,6 +172,10 @@ player.drawHud = function(self)
   lg.setColor(255,255,255)
   lg.draw(self.hud.canvas, self.hud.x, self.hud.y)
 
+  local mx, my = love.mouse.getPosition()
+  lg.rectangle("fill", mx-1, my-8, 2, 16)
+  lg.rectangle("fill", mx-8, my-1, 16, 2)
+
   local weapon = self.weapons.current
   lg.setColor(192,192,192)
   lg.print("Ammo: " .. math.ceil(weapon.ammo / weapon.bullets) .. "/" .. math.ceil(weapon.magazine / weapon.bullets), self.hud.ammo.x+self.hud.x, self.hud.ammo.y+self.hud.y)
