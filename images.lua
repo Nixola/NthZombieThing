@@ -34,9 +34,22 @@ local floor = math.floor
 
 img.arc = function(self, fraction)
   local n = floor(fraction * segments + .5)
-  arc:setDrawRange(2, n+2)
+  arc:setDrawRange(1, n+2)
   return arc
 end
+
+img.ring = function(self, radius, fraction)
+  local vertices = {}
+  local n = floor(fraction * segments + .5)
+
+  for i = 0, n do
+    vertices[#vertices + 1] = t[i+2][1] * radius
+    vertices[#vertices + 1] = t[i+2][2] * radius
+  end
+
+  return vertices
+end
+
 
 local imgD = love.image.newImageData(1,1)
 imgD:setPixel(0,0,255,255,255,255)
