@@ -97,11 +97,11 @@ end
 
 hud.init = function(self)
     lg.rectangle("fill", 0, 0, self.width, self.height)
-    self.hp:draw(true)
-    self.exp:draw(true)
+    self.hp:draw()
+    self.exp:draw()
     --self.ammo:draw(true)
-    self.levelup:draw(true)
-    self.weapons:draw(true)
+    self.levelup:draw()
+    self.weapons:draw()
   lg.setCanvas()
 end
 
