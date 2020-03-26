@@ -12,8 +12,6 @@ local enemies = require 'enemies'
 local weapons = require 'player.weapons'
 local drops = require 'drops'
 
-local setColor = love.graphics.setColor
-
 io.stdout:setvbuf 'no'
 
 local lk = love.keyboard
@@ -45,11 +43,11 @@ end
 
 
 love.draw = function()
-  love.graphics.setColor(255,255,255)
-  love.graphics.print(love.timer.getFPS())
+  lg.setColor(1,1,1)
+  lg.print(love.timer.getFPS())
   camera:set()
   
-    lg.setColor(192,32,32)
+    lg.setColor(12/16,2/16,2/16)
     for x = -1, 1 do
       for y = -1, 1 do
         lg.rectangle('fill', (math.floor(player.x/400) + x) * 400, (math.floor(player.y/300) + y)*300, 16, 16) --just some squares to know where you're going
@@ -67,12 +65,12 @@ love.draw = function()
   player:drawHud()
 
   if pause then
-    love.graphics.setColor(192, 192, 192, 64)
-    love.graphics.rectangle("fill", -1, -1, W+2, H+2)
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.setFont(fonts.huge)
-    love.graphics.printf("PAUSE", 0, H/2, W, "center")
-    love.graphics.setFont(fonts.base)
+    lg.setColor(12/16, 12/16, 12/16, 4/16)
+    lg.rectangle("fill", -1, -1, W+2, H+2)
+    lg.setColor(1, 1, 1)
+    lg.setFont(fonts.huge)
+    lg.printf("PAUSE", 0, H/2, W, "center")
+    lg.setFont(fonts.base)
   end
 
 end

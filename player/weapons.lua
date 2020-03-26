@@ -92,22 +92,22 @@ weapons.draw = function(self)
       t[l+3] = x2
       t[l+4] = y2
     end
-    local alpha = self.current.continuous and 255 or (1-self.current.timer/self.current.duration)^2*255
+    local alpha = self.current.continuous and 1 or (1-self.current.timer/self.current.duration)^2
     if C[1] then
       C[#C+1] = C[1]
       C[#C+1] = C[2]
-      lg.setColor(255,0,0,alpha)
+      lg.setColor(1,0,0,alpha)
       lg.line(C)
     end
     if nonC[1] then
       nonC[#nonC+1] = nonC[1]
       nonC[#nonC+1] = nonC[2]
-      lg.setColor(255,255,255,alpha)
+      lg.setColor(1,1,1,alpha)
       lg.line(nonC)
     end
     --[[
     for i, v in ipairs(self.lines) do
-      lg.setColor(255, v.critical and 0 or 255, v.critical and 0 or 255, self.current.continuous and 255 or (1-self.current.timer/self.current.duration)*255)
+      lg.setColor(1, v.critical and 0 or 1, v.critical and 0 or 1, self.current.continuous and 1 or (1-self.current.timer/self.current.duration))
       local x1, y1, x2, y2 = v:unpack()
       lg.line(x2 and x1 or 0, y2 and y1 or 0, x2 or x1, y2 or y1)
     end--]]

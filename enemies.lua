@@ -15,7 +15,7 @@ enemies.particles = {}
 
 enemies.load = function(self)
 
-  enemies.color = {16, 92, 16}
+  enemies.color = {1/16, 6/16, 1/16}
   enemies.level = 1
   enemies.damping = 0.1
   enemies.type = {
@@ -49,7 +49,7 @@ enemies.load = function(self)
       maxSpeed = 100,
       acceleration = 150,
       r = 18,
-      color = {32, 184, 184}
+      color = {2/16, 11/16, 11/16}
     }, {__index = self})
   }
   enemy.types = {
@@ -160,13 +160,13 @@ end
 
 enemies.draw = function(self)
 
-  lg.setColor(255,255,255)
+  lg.setColor(1,1,1)
   for i, v in ipairs(self.particles) do
     lg.draw(v)
   end
   
   --draw their HP
-  lg.setColor(255,0,0)
+  lg.setColor(1,0,0)
   for i, enemy in ipairs(self) do
     local x, y = enemy.position:unpack()
     --lg.arc('fill', x, y, enemy.r, 0, enemy.hp/enemy.maxHP*2*math.pi, enemy.r)
@@ -174,7 +174,7 @@ enemies.draw = function(self)
   end
 
   --draw their shields, if any
-  lg.setColor(255,255,255)
+  lg.setColor(1,1,1)
   for i, enemy in ipairs(self) do
     if enemy.shields then
       local x, y = enemy.position:unpack()
@@ -192,7 +192,7 @@ enemies.draw = function(self)
 
   --and debug show their stuff
   --[[
-  lg.setColor(255,255,255)
+  lg.setColor(1,1,1)
   for i, enemy in ipairs(self) do
     local x, y = enemy.position:unpack()
     lg.print(enemy.velocity:length(), x, y)

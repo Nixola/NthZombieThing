@@ -1,7 +1,7 @@
 local drops = {}
 
 drops.draw = function(self)
-  love.graphics.setColor(255, 255, 255)
+  love.graphics.setColor(1, 1, 1)
   love.graphics.setLineWidth(1)
   for i, drop in ipairs(self) do
     local w, h = drop.icon:getWidth(), drop.icon:getHeight()

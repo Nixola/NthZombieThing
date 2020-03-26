@@ -154,7 +154,7 @@ end
 
 player.draw = function(self)
 
-  lg.setColor(192,192,192)
+  lg.setColor(12/16,12/16,12/16)
   lg.draw(img.circle, self.x, self.y, 0, self.r)
   for i, particleSystem in pairs(self.particles) do
     lg.draw(particleSystem)
@@ -167,28 +167,28 @@ player.drawHud = function(self)
   local weapon = self.weapons.current
   local mx, my = love.mouse.getPosition()
 
-  lg.setColor(255,255,255)
+  lg.setColor(1,1,1)
   lg.draw(self.hud.canvas, self.hud.x, self.hud.y)
 
-  lg.setColor(192,192,192)
+  lg.setColor(12/16,12/16,12/16)
   lg.print("Ammo: " .. math.ceil(weapon.ammo / weapon.bullets) .. "/" .. math.ceil(weapon.magazine / weapon.bullets), self.hud.ammo.x+self.hud.x, self.hud.ammo.y+self.hud.y)
   
   -- let's draw our crosshair here
   lg.push()
     lg.translate(mx, my)
     lg.setLineWidth(2)
-    lg.setColor(255, 255, 255)
+    lg.setColor(1, 1, 1)
     lg.line(-8, 0, 8, 0)
     lg.line(0, -8, 0, 8)
 
     --plus the other things that go on the crosshair
     local ring
     if self.weapons.current.reloading then
-      lg.setColor(128,128,192)
+      lg.setColor(8/16,8/16,12/16)
       --lg.draw(img:arc(self.weapons.current.reloading/self.weapons.current.reload), self.x, self.y, 0, self.r+2)
       ring = img:ring(10, 1 - weapon.reloading/weapon.reload)
     else
-      lg.setColor(192, 192, 0)
+      lg.setColor(12/16, 12/16, 0)
       ring = img:ring(9, weapon.ammo/weapon.magazine)
     end
     if ring[3] then --we need two vertices!
@@ -198,7 +198,7 @@ player.drawHud = function(self)
     local cooldown = weapon.timer * weapon.rate
     if cooldown <= 1 and not weapon.continuous and not weapon.reloading then
       ring = img:ring(6, 1 - cooldown)
-      lg.setColor(192, 0, 0)
+      lg.setColor(12/16, 0, 0)
       if ring[3] then
         lg.line(ring)
       end
