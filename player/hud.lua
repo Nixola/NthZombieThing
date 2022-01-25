@@ -27,21 +27,21 @@ hud.hp.draw = function(self, total)
   if not total then lg.setCanvas() end
 end
 
-hud.exp = {x = 0, y = 16, h = 16, w = 92}
+hud.exp = {x = 0, y = 16, h = 32, w = 92}
 hud.exp.draw = function(self, total)
   if not total then lg.setCanvas(hud.canvas) end
   lg.setColor(hud.bg)
   lg.rectangle("fill", self.x, self.y, self.w, self.h)
 
   lg.setColor(8/16 + p.experience/p.level/10 * 6/16, 8/16 + p.experience/p.level/10 * 6/16, 1)
-  lg.print("XP: " .. p.experience .. "/" .. p.level*10, self.x, self.y)
+  lg.print("XP: " .. p.experience .. "/" .. p.level*10, self.x, self.y + self.h / 2)
 
   lg.setColor(12/16,12/16,0)
-  lg.printf("LV " .. p.level, self.x, self.y, self.w, "right")
+  lg.printf("LV " .. p.level, self.x, self.y, self.w, "left")
   if not total then lg.setCanvas() end
 end
 
-hud.ammo = {x = 0, y = 32, h = 16, w = 96}
+hud.ammo = {x = 0, y = 48, h = 16, w = 96}
 --[[
 hud.ammo.draw = function(self, total)
   if not total then lg.setCanvas(hud.canvas) end
