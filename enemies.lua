@@ -25,7 +25,8 @@ enemies.load = function(self)
       damageSpread = .2,
       maxSpeed = 80,
       acceleration = 130,
-      r = 18
+      r = 18,
+      mass = 2
     }, {__index = self}),
 
     small = setmetatable({
@@ -34,7 +35,8 @@ enemies.load = function(self)
       damageSpread = .3,
       maxSpeed = 300,
       acceleration = 300,
-      r = 9
+      r = 9,
+      mass = 0.8
     }, {__index = self}),
 
     psion = setmetatable({
@@ -94,8 +96,8 @@ enemies.spawn = function(self, X, Y)
   e.acceleration = type.acceleration * (level / 10 + 1)
   e.damageSpread = type.damageSpread
   e.r = type.r + love.math.random(5)-3
+  e.mass = type.mass or 1
   e.level = level
-
 
   table.insert(self, e)
 end
@@ -215,7 +217,7 @@ enemy.hit = function(self, damage, x, y, knockback)
     self:teleport()
   end
   self.hp = self.hp - damage
-  local bump = vector(x, y, self.position.x, self.position.y)%(knockback or (damage+3)*15)
+  local bump = vector(x, y, self.position.x, self.position.y)%((knockback or (damage+3)*15) / self.mass)
   self.velocity = self.velocity + bump
   if self.hp <= 0 then
     self:die()
