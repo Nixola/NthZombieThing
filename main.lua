@@ -43,14 +43,12 @@ end
 
 
 love.draw = function()
-  lg.setColor(1,1,1)
-  lg.print(love.timer.getFPS())
   camera:set()
   
-    lg.setColor(12/16,2/16,2/16)
-    for x = -1, 1 do
-      for y = -1, 1 do
-        lg.rectangle('fill', (math.floor(player.x/400) + x) * 400, (math.floor(player.y/300) + y)*300, 16, 16) --just some squares to know where you're going
+    lg.setColor(1/16,1/16,1/16)
+    for x = -4, 4 do
+      for y = -3, 3 do
+        lg.rectangle('fill', (math.floor(player.x/128) + x) * 128, (math.floor(player.y/128) + y)*128, 124, 124) --just some squares to know where you're going
       end
     end
 
@@ -61,6 +59,9 @@ love.draw = function()
     enemies:draw()
 
   camera:unset()
+
+  lg.setColor(1,1,1)
+  lg.print(love.timer.getFPS())
 
   player:drawHud()
 
